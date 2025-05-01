@@ -1,0 +1,219 @@
+<h1 align="center">{{ project_name }}</h1>
+
+<br/>
+
+{%- if is_open_source %}
+
+<!-- Project Badges -->
+{%- if uses_docs %}
+  {%- if uses_readthedocs %}
+[![Documentation Status][docs-read-badge]][docs-read-url]
+  {%- elif docs == 'Github Pages' %}
+    [![Documentation Status][docs-git-badge]][docs-git-url]
+  {%- endif %}
+{%- endif %}
+[![License - {{ open_source_license }}][license-badge]][license-url]<br/>
+
+{%- if not private_package_repository_name %}
+[![PyPI - Version][pypi-badge]][pypi-url] [![PyPI - Downloads][pypi-downloads]][pypi-url] [![PyPI - Python Version][python-versions]][pypi-url]
+{%- endif %}<br/>
+[![CI - Tests][ci-badge]][ci-url] [![CD - Publish][cd-badge]][cd-url] [![GitHub stars][stars-badge]][github-url] [![GitHub forks][forks-badge]][github-url] [![GitHub issues][issues-badge]][issues-url]<br/>
+[![Linting - Ruff][ruff-badge]][ruff-url]
+{%- if formatter == 'Ruff-format' %}
+[![Formatter - Ruff][formatter-ruff-badge]][ruff-url]
+{%- elif formatter == 'Black' %}
+[![Formatter - Black][formatter-black-badge]][black-url]
+{%- endif %}
+[![Types - Mypy][mypy-badge]][mypy-url]<br/>
+
+<h3 align="center">
+  <a href="https://github.com/{{ repository_namespace }}/{{ repository_name }}">GitHub</a>
+  {%- if not private_package_repository_name %}
+  &middot;
+  <a href="https://pypi.org/project/{{ package_distribution_name }}/">PyPI</a>
+  {%- endif %}
+  {%- if uses_docs %}
+  &middot;
+    {%- if uses_readthedocs %}
+  <a href="https://{{ package_distribution_name }}.readthedocs.io/en/stable/">Docs</a>
+    {%- elif docs == 'Github Pages' %}
+  <a href="https://{{ repository_namespace }}.{{ repository_provider.replace('.com', '.io') }}/{{ repository_name }}/">Docs</a>
+    {%- endif %}
+  {%- endif %}
+  &middot;
+  <a href="https://github.com/{{ repository_namespace }}/{{ repository_name }}/issues">Issues</a>
+</h3>
+{%- endif %}
+
+<h3 align="center">
+  {{ project_short_description }}
+</h3>
+
+<br/>
+
+---
+
+## Features
+
+TODO
+
+## Installation
+
+{%- if not private_package_repository_name %}
+
+### From PyPI
+
+```bash
+pip install {{ package_distribution_name }}
+```
+
+or
+
+```bash
+uv add {{ package_distribution_name }}
+```
+{%- else %}
+
+### From Private Repository
+
+```bash
+pip install {{ package_distribution_name }} --index-url {{ private_package_repository_url }}
+```
+
+or
+
+```bash
+uv add {{ package_distribution_name }} --index {{ private_package_repository_name }}
+```
+{%- endif %}
+
+### From Source
+
+```bash
+git clone https://{{ repository_provider }}/{{ repository_namespace }}/{{ repository_name }}.git
+cd {{ repository_name }}
+uv sync
+```
+
+## Usage
+
+{%- if has_cli %}
+
+### Command Line Interface
+
+```bash
+{{ package_command_line_name }} --help
+```
+{%- endif %}
+
+### Python API
+
+```python
+import {{ package_import_name }}
+
+# TODO: Add usage examples
+```
+
+## Development
+
+### Setup
+
+```bash
+git clone https://{{ repository_provider }}/{{ repository_namespace }}/{{ repository_name }}.git
+cd {{ repository_name }}
+uv sync
+```
+
+{%- if hooks_tool == 'pre-commit' %}
+Install the pre-commit script
+```bash
+uv run pre-commit install
+```
+{%- elif hooks_tool == 'prek' %}
+Install the prek git hook
+```bash
+uv run prek install
+```
+{%- endif %}
+
+
+### Running Tests
+
+{%- if use_pytest %}
+```bash
+uv run pytest
+```
+{%- else %}
+```bash
+uv run python -m unittest discover
+```
+{%- endif %}
+
+### Code Quality
+
+```bash
+uv run ruff check .
+{%- if formatter == 'Ruff-format' %}
+uv run ruff format .
+{%- elif formatter == 'Black' %}
+uv run black .
+{%- endif %}
+uv run mypy src/{{ package_import_name }}
+```
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## Credits
+
+This package was created with [Copier](https://github.com/copier-org/copier) and the [Copier PyPackage uv](https://github.com/psolsfer/uvcopier) project template.
+
+
+<!-- MARKDOWN LINKS & IMAGES -->
+<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
+{%- if uses_docs %}
+  {%- if uses_readthedocs %}
+[docs-read-badge]: https://readthedocs.org/projects/{{ package_distribution_name }}/badge/?version=stable&style=for-the-badge
+[docs-read-url]: https://{{ package_distribution_name }}.readthedocs.io/en/stable/
+  {%- elif docs == 'Github Pages' %}
+[docs-git-badge]: https://img.shields.io/badge/docs-online-blue.svg&style=for-the-badge
+[docs-git-url]: https://{{ repository_namespace }}.{{ repository_provider.replace('.com', '.io') }}/{{ repository_name }}/
+  {%- endif %}
+{%- endif %}
+
+[license-badge]: https://img.shields.io/pypi/l/{{ package_distribution_name }}.svg?style=for-the-badge
+[license-url]: https://spdx.org/licenses/{{ open_source_license }}.html
+
+[pypi-badge]: https://img.shields.io/pypi/v/{{ package_distribution_name }}.svg?logo=pypi&label=PyPI&logoColor=gold&style=for-the-badge
+[pypi-url]: https://pypi.org/project/{{ package_distribution_name }}/
+
+[pypi-downloads]: https://img.shields.io/pypi/dm/{{ package_distribution_name }}.svg?color=blue&label=Downloads&logo=pypi&logoColor=gold&style=for-the-badge
+[python-versions]: https://img.shields.io/pypi/pyversions/{{ package_distribution_name }}.svg?logo=python&label=Python&logoColor=gold&style=for-the-badge
+
+[ci-badge]: https://img.shields.io/github/actions/workflow/status/{{ repository_namespace }}/{{ repository_name }}/test-push-pr.yml?style=for-the-badge
+[ci-url]: https://github.com/{{ repository_namespace }}/{{ repository_name }}/actions/workflows/test-push-pr.yml
+
+[cd-badge]: https://img.shields.io/github/actions/workflow/status/{{ repository_namespace }}/{{ repository_name }}/python-publish.yml?style=for-the-badge
+[cd-url]: https://github.com/{{ repository_namespace }}/{{ repository_name }}/actions/workflows/python-publish.yml
+
+[stars-badge]: https://img.shields.io/github/stars/{{ repository_namespace }}/{{ repository_name }}.svg?style=for-the-badge
+[forks-badge]: https://img.shields.io/github/forks/{{ repository_namespace }}/{{ repository_name }}.svg?style=for-the-badge
+
+[issues-badge]: https://img.shields.io/github/issues/{{ repository_namespace }}/{{ repository_name }}.svg?style=for-the-badge
+[issues-url]: https://github.com/{{ repository_namespace }}/{{ repository_name }}/issues
+
+[github-url]: https://github.com/{{ repository_namespace }}/{{ repository_name }}
+
+[ruff-badge]: https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/charliermarsh/ruff/main/assets/badge/v2.json&style=for-the-badge
+[ruff-url]: https://github.com/astral-sh/ruff
+
+{%- if formatter == 'Ruff-format' %}
+[formatter-ruff-badge]: https://img.shields.io/badge/Ruff%20Formatter-checked-blue.svg?style=for-the-badge
+{%- elif formatter == 'Black' %}
+[formatter-black-badge]: https://img.shields.io/badge/Black%20Formatter-checked-blue.svg?style=for-the-badge
+[black-url]: https://github.com/psf/black
+{%- endif %}
+
+[mypy-badge]: https://img.shields.io/badge/mypy%20-%20checked-blue?style=for-the-badge
+[mypy-url]: https://mypy-lang.org/

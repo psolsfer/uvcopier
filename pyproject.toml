@@ -1,0 +1,74 @@
+[project]
+name = "uvcopier"
+version = "0.1.0"
+description = "A Copier template for creating Python packages with uv."
+authors = [
+    {name = "Pablo Solís-Fernández", email = "psolsfer@gmail.com"},
+]
+readme = "README.md"
+keywords = [
+    "python",
+    "copier",
+    "template",
+    "ruff",
+    "black",
+    "packages",
+    "uv",
+    "codestyle",
+    "formatters",
+    "python-packages"
+]
+requires-python = "<3.14,>=3.10"
+dependencies = [
+    "copier>=9.0",
+    "jinja2>=3.0",
+]
+license = "BSD-3-Clause"
+license-files = ["LICENSE"]
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: BSD License",
+    "Natural Language :: English",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development",
+]
+
+[project.urls]
+Homepage = "https://github.com/psolsfer/uvcopier"
+Repository = "https://github.com/psolsfer/uvcopier"
+
+[dependency-groups]
+dev = [
+    "click>=8.2.1",
+    "mkdocs>=1.5.3",
+    "mkdocs-awesome-pages-plugin>=2.9.2",
+    "mkdocs-include-markdown-plugin>=6.0",
+    "mkdocs-material>=9.4.2",
+    "mkdocs-material-extensions>=1.2",
+    "mkdocstrings[python]>=0.23.0",
+    "pytest>=8.4.1",
+    "typer>=0.16.0",
+    "tox",
+    "tox-uv>=1.28.0",
+]
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+testpaths = ["tests"]
+python_files = ["test*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = [
+    "-ra",  # Show all test outcomes except passed
+    "--strict-markers",  # Treat unregistered markers as errors
+    "--strict-config",   # Treat config warnings as errors
+    "--disable-warnings",  # Disable warnings display
+    "-v",  # Verbose output
+    "--tb=short",  # Shorter traceback format
+    "--durations=10",  # Show 10 slowest tests
+]

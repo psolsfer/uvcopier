@@ -1,0 +1,137 @@
+# Troubleshooting
+
+This page contains solutions to common problems you might encounter when using {{ project_name }}.
+
+## Installation Problems
+
+### Package not found
+
+If you get a "package not found" error:
+
+1. Check that you're using the correct package name: `{{ package_distribution_name }}`
+2. Ensure you have Python {{ python_version }}+ installed
+3. Try upgrading pip: `pip install --upgrade pip`
+
+{%- if private_package_repository_name %}
+
+### Private repository access issues
+
+If you can't access the private repository:
+
+1. Verify your credentials with your system administrator
+2. Check that you're using the correct index URL: `{{ private_package_repository_url }}`
+3. Try installing with explicit index: `pip install {{ package_distribution_name }} --index-url {{ private_package_repository_url }}`
+
+{%- endif %}
+
+## Runtime Issues
+
+### Import errors
+
+If you get import errors:
+
+```python
+import {{ package_import_name }}  # Correct import
+```
+
+Make sure you're using the correct import name: `{{ package_import_name }}`.
+
+{%- if has_cli %}
+
+## CLI Issues
+
+### Command not found
+
+If the `{{ package_command_line_name }}` command is not found:
+
+1. Ensure the package is installed: `pip list | grep {{ package_distribution_name }}`
+2. Check that your Python scripts directory is in PATH
+3. Try running with: `python -m {{ package_import_name }}.cli`
+
+{%- endif %}
+
+## Development Issues
+
+### Tests failing
+
+If tests are failing in your development environment:
+
+1. Install development dependencies: `uv sync`
+2. Check Python version compatibility
+3. Run tests individually to isolate issues:
+
+   ```bash
+{%- if use_pytest %}
+   uv run pytest tests/test_specific.py -v
+{%- else %}
+   uv run python -m unittest tests.test_specific
+{%- endif %}
+   ```
+
+### Code style issues
+
+If pre-commit hooks or CI checks are failing:
+
+```bash
+# Fix formatting
+{%- if formatter == 'Ruff-format' %}
+uv run ruff format .
+{%- elif formatter == 'Black' %}
+uv run black .
+{%- endif %}
+
+# Fix linting issues
+uv run ruff check --fix .
+
+# Check types
+uv run mypy src/{{ package_import_name }}
+```
+
+### Environment issues
+
+If you're having environment-related problems:
+
+1. Use a clean virtual environment:
+   ```bash
+   uv venv --python {{ python_version }}
+   uv sync
+   ```
+
+2. Clear any cached files:
+   ```bash
+   uv clean
+   ```
+
+## Performance Issues
+
+### Slow imports
+
+If imports are slow, check for:
+
+1. Large dependencies being imported unnecessarily
+2. Network calls during import
+3. Heavy computation in module-level code
+
+## Getting Help
+
+If none of these solutions work:
+
+{%- if is_open_source %}
+
+1. Check existing [GitHub Issues](https://{{ repository_provider }}/{{ repository_namespace }}/{{ repository_name }}/issues)
+2. Create a new issue with:
+   - Your operating system and Python version
+   - Complete error messages
+   - Steps to reproduce the problem
+   - What you expected to happen
+
+{%- else %}
+
+1. Contact the development team through internal channels
+2. Provide:
+   - Your operating system and Python version
+   - Complete error messages
+   - Steps to reproduce the problem
+   - What you expected to happen
+
+{%- endif %}

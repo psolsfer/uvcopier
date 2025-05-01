@@ -1,0 +1,65 @@
+# Usage
+
+## Python API
+
+To use {{ project_name }} in a Python project:
+
+```python
+import {{ package_import_name }}
+
+# Your code here
+```
+
+{%- if has_cli %}
+
+## Command Line Interface
+
+{{ project_name }} provides a command-line interface:
+
+```bash
+# Show help
+{{ package_command_line_name }} --help
+
+{%- if command_line_interface|lower == 'typer' %}
+# Run a command (example)
+{{ package_command_line_name }} hello
+{%- else %}
+# Run the main command
+{{ package_command_line_name }}
+{%- endif %}
+```
+
+{%- endif %}
+
+## Examples
+
+TODO: Add usage examples here.
+
+### Basic Example
+
+```python
+import {{ package_import_name }}
+
+# Example usage
+result = {{ package_import_name }}.some_function()
+print(result)
+```
+
+{%- if has_cli %}
+
+### CLI Example
+
+```bash
+# Example CLI usage
+{{ package_command_line_name }} --option value
+```
+
+{%- endif %}
+
+## Configuration
+
+TODO: Document any configuration options here.
+
+## Advanced Usage
+
+TODO: Document advanced usage patterns here.

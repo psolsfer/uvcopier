@@ -1,0 +1,105 @@
+{%- set min_index = all_py_versions.index(python_version) -%}
+{%- set selected_versions = all_py_versions[min_index:] -%}
+
+[tox]
+isolated_build = True
+envlist =
+{%- for v in supported_versions %}
+    py{{ v.replace('.', '') }},
+{%- endfor %}
+    check,
+    lint,
+{%- if uses_docs %}
+    docs,
+{%- endif %}
+{%- if use_pytest %}
+    report
+{%- endif %}
+
+[gh-actions]
+python =
+{%- for v in supported_versions %}
+    {{ v }}: py{{ v.replace('.', '') }}{% if loop.last %}, check, lint{% if uses_docs %}, docs{% endif %}{% if use_pytest %}, report{% endif %}{% endif %}
+{%- endfor %}
+
+[testenv]
+# Use uv for faster dependency resolution and installation
+package = wheel
+wheel_build_env = .pkg
+setenv = PYTHONPATH = {toxinidir}
+deps = tox-uv
+skip_install = true
+allowlist_externals = uv
+commands_pre = uv sync --group test
+commands =
+{%- if use_pytest %}
+    uv run pytest --basetemp={envtmpdir}
+{%- else %}
+    uv run python -m unittest discover
+{%- endif %}
+
+{%- if use_pytest %}
+
+[testenv:py313]
+depends = clean
+commands_pre = uv sync --group test
+commands =
+    uv run pytest --basetemp={envtmpdir} --cov --cov-append
+
+{%- endif %}
+
+[testenv:check]
+description = Format and check the code base
+skip_install = true
+deps = tox-uv
+commands_pre = uv sync --group dev
+{%- if hooks_tool == 'pre-commit' %}
+commands =
+    uv run pre-commit run --all-files --show-diff-on-failure
+{%- elif hooks_tool == 'prek' %}
+commands =
+    uv run prek run --all-files --show-diff-on-failure
+{%- endif %}
+
+[testenv:lint]
+description = Run all linting/formatting checks
+basepython = python
+deps = tox-uv
+commands_pre = uv sync --group test
+commands =
+    uv run ruff check src/{{ package_import_name }} tests
+{%- if formatter == 'Black' %}
+    uv run black --check src/{{ package_import_name }} tests
+{%- elif formatter == 'Ruff-format' %}
+    uv run ruff format --check src/{{ package_import_name }} tests
+{%- endif %}
+    uv run mypy src/{{ package_import_name }}
+
+{%- if uses_docs %}
+
+[testenv:docs]
+description = Build documentation
+deps = tox-uv
+commands_pre = uv sync --group docs
+commands =
+    uv run mkdocs build
+
+{%- endif %}
+{%- if use_pytest %}
+
+[testenv:report]
+description = Generate coverage reports
+deps = tox-uv
+commands_pre = uv sync --group test
+commands =
+    uv run coverage report
+    uv run coverage html
+
+[testenv:clean]
+description = Clean coverage data
+deps = tox-uv
+commands_pre = uv sync --group test
+commands =
+    uv run coverage erase
+
+{%- endif %}

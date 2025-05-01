@@ -1,0 +1,251 @@
+# =============================================================================
+# COPIER CONFIGURATION FOR PYTHON PACKAGE TEMPLATE
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Template Metadata and Configuration
+# -----------------------------------------------------------------------------
+_templates_suffix: .jinja
+_subdirectory: template
+_min_copier_version: "9.0.0"
+
+# Enhanced Jinja environment options for better template handling
+_envops:
+  autoescape: false
+  keep_trailing_newline: true
+
+# Preserve symlinks during template generation
+_preserve_symlinks: true
+
+# Jinja extensions for enhanced templating capabilities
+# _jinja_extensions:
+#   - copier_templates_extensions.TemplateExtensionLoader
+# Note: Extensions can be added here when needed for advanced features
+
+# Skip certain files if they already exist to prevent overwriting user changes
+_skip_if_exists:
+  - CHANGELOG.md
+  - HISTORY.md
+
+# Project Information
+project_name:
+  type: str
+  help: Project name (human-readable, can contain spaces)
+  placeholder: Python Boilerplate
+
+project_short_description:
+  type: str
+  help: Short description of the project
+  placeholder: Python Boilerplate contains all the boilerplate you need to create a Python package.
+
+# Author Information
+full_name:
+  type: str
+  help: Author full name
+  placeholder: Firstname Lastname
+
+email:
+  type: str
+  help: Author email
+  placeholder: email@example.com
+
+github_username:
+  type: str
+  help: GitHub username
+  placeholder: gituser
+
+# Repository Configuration
+repository_provider:
+  type: str
+  help: Repository provider
+  default: github.com
+  choices:
+    - github.com
+    - gitlab.com
+
+repository_namespace:
+  type: str
+  help: Repository namespace (usually your username/organization)
+  default: "{{ github_username }}"
+
+repository_name:
+  type: str
+  help: Repository name (will be used for GitHub repository)
+  default: "{{ project_name|lower|replace(' ', '-')|replace('_', '-') }}"
+
+# Package Naming (Best Practice Separation)
+package_distribution_name:
+  type: str
+  help: PyPI distribution name (pip install NAME) - use hyphens
+  default: "{{ project_name|lower|replace(' ', '-')|replace('_', '-') }}"
+
+package_import_name:
+  type: str
+  help: Python import name (import NAME) - use underscores
+  default: "{{ project_name|lower|replace(' ', '_')|replace('-', '_') }}"
+
+package_command_line_name:
+  type: str
+  help: CLI command name (use in shell) - use hyphens
+  default: "{{ project_name|lower|replace(' ', '-')|replace('_', '-') }}"
+
+# PyPI Configuration
+pypi_username:
+  type: str
+  help: PyPI username
+  default: "{{ github_username }}"
+
+private_package_repository_name:
+  type: str
+  help: Name of the private package repository (leave empty if not using)
+  default: ""
+
+private_package_repository_url:
+  type: str
+  help: URL of the private package repository (leave empty if not using)
+  default: ""
+  when: "{{ private_package_repository_name }}"
+
+# Version and License
+version:
+  type: str
+  help: Initial project version
+  default: 0.1.0
+
+open_source_license:
+  type: str
+  help: Open source license to use
+  choices:
+    Not open source: Not open source
+    Apache License 2.0: Apache-2.0
+    BSD 2-Clause License: BSD-2-Clause
+    BSD 3-Clause License: BSD-3-Clause
+    GNU General Public License v3.0 only: GPL-3.0
+    MIT License: MIT
+    The Unlicense: Unlicense
+  default: BSD-3-Clause
+
+# Python Configuration
+python_version:
+  type: str
+  help: Minimum Python version to support
+  default: "3.10"
+  choices:
+    - "3.9"
+    - "3.10"
+    - "3.11"
+    - "3.12"
+    - "3.13"
+
+# Development Tools Configuration
+formatter:
+  type: str
+  help: Code formatter to use
+  choices:
+    - Ruff-format
+    - Black
+    - No
+  default: Ruff-format
+
+hooks_tool:
+  type: str
+  help: Tool to manage git hooks
+  choices:
+    - prek
+    - pre-commit
+    - No
+  default: prek
+
+use_pytest:
+  type: bool
+  help: Use pytest for testing
+  default: true
+
+development_environment:
+  type: str
+  help: Type of development environment configuration
+  choices:
+    - simple
+    - strict
+  default: simple
+
+# Optional Features
+command_line_interface:
+  type: str
+  help: Command-line interface framework to use
+  choices:
+    - No CLI
+    - Click
+    - Typer
+    - Argparse
+  default: No CLI
+
+docs:
+  type: str
+  help: Documentation platform to use
+  choices:
+    - Read the docs
+    - Github Pages
+    - No
+  default: Read the docs
+
+with_jupyter_lab:
+  type: bool
+  help: Include Jupyter Lab in development dependencies
+  default: false
+
+with_pydantic_typing:
+  type: bool
+  help: Use Pydantic for enhanced typing and validation
+  default: true
+
+create_author_file:
+  type: bool
+  help: Create an AUTHORS file
+  default: true
+
+docstring_style:
+  type: str
+  help: Docstring style to use
+  choices:
+    - numpy
+    - google
+  default: numpy
+
+# Derived Variables
+is_open_source:
+  type: bool
+  default: "{{ open_source_license != 'Not open source' }}"
+  when: false
+
+has_cli:
+  type: bool
+  default: "{{ command_line_interface != 'No CLI' }}"
+  when: false
+
+uses_docs:
+  type: bool
+  default: "{{ docs != 'False' }}"
+  when: false
+
+uses_readthedocs:
+  type: bool
+  default: "{{ docs == 'Read the docs' }}"
+  when: false
+
+uses_hook_tool:
+  type: bool
+  default: "{{ hooks_tool != 'False' }}"
+  when: false
+
+all_py_versions:
+  default: ["3.9", "3.10", "3.11", "3.12", "3.13"]
+  type: json  # ensure it’s interpreted as a list, not a string
+  when: false  # do not ask the user, just inject it
+
+
+
+# Template Tasks (Post-generation actions)
+# _tasks:
+#   - "echo 'Template generation completed successfully!'"
+#   - "echo 'Next steps: cd {{ package_import_name }} && git init'"
