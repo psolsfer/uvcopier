@@ -71,7 +71,7 @@ jobs:
 {%- if development_environment == "strict" %}
 
     - name: Run security checks
-      run: uv run safety check
+      run: uv run pip-audit
 
 {%- endif %}
 {%- if use_pytest %}

@@ -145,8 +145,8 @@ def coverage(c: Context, publish: bool = False) -> None:
 
 @task
 def safety(c: Context) -> None:
-    """Check safety of the dependencies."""
-    _run(c, "safety check --continue-on-error --full-report")
+    """Check safety of the dependencies with pip-audit."""
+    _run(c, "pip-audit")
 
 
 {%- endif %}

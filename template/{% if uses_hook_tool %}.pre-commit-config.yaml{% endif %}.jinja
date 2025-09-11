@@ -84,6 +84,15 @@ repos:
         ]
         args: [--explicit-package-bases]
 
+{%- if development_environment == "strict" %}
+
+  - repo: https://github.com/pypa/pip-audit
+    rev: v2.9.0
+    hooks:
+      -   id: pip-audit
+
+{%- endif %}
+
   - repo: local
     hooks:
       - id: commitizen
@@ -93,13 +102,3 @@ repos:
         require_serial: true
         language: system
         stages: [commit-msg]
-
-{%- if development_environment == "strict" %}
-
-      - id: safety
-        name: safety
-        entry: safety check
-        language: system
-        pass_filenames: false
-
-{%- endif %}
