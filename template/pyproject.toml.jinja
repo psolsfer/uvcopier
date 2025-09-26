@@ -13,7 +13,7 @@
 {%- set command_line = command_line_interface|lower -%}
 
 [build-system]
-requires = ["uv_build>=0.8.5,<0.9.0"]
+requires = ["uv_build>=0.8.5,<1.0"]
 build-backend = "uv_build"
 
 [project]
@@ -21,6 +21,9 @@ name = "{{ package_distribution_name }}"
 version = "{{ version }}"
 description = "{{ project_short_description }}"
 authors = [
+    {name = "{{ full_name.replace('\"', '\\\"') }}", email = "{{ email }}"}
+]
+maintainers = [
     {name = "{{ full_name.replace('\"', '\\\"') }}", email = "{{ email }}"}
 ]
 readme = "README.md"
@@ -32,6 +35,7 @@ license-files = ["LICENSE"]
 classifiers = [
     "Development Status :: 2 - Pre-Alpha",
     "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
 {%- if is_open_source %}
     "{{ license_classifiers[open_source_license] }}",
 {%- endif %}
@@ -40,6 +44,8 @@ classifiers = [
 {%- for v in supported_versions %}
     "Programming Language :: Python :: {{ v }}"{% if not loop.last %},{% endif %}
 {%- endfor %}
+    "Topic :: Scientific/Engineering",
+    "Typing :: Typed",
 ]
 requires-python = ">={{ python_version }},<3.14"
 dependencies = [
@@ -235,13 +241,13 @@ fix = true
 line-length = 100
 
 [tool.ruff.lint]
-{%- if development_environment == "strict" %}
-select = ["A", "ASYNC", "B", "BLE", "C4", "C90", "D", "DTZ", "E", "EM", "ERA", "F", "FLY", "G", "I", "ICN", "INP", "ISC", "N", "NPY", "PGH", "PIE", "PLC", "PLE", "PLR", "PLW", "PT", "PTH", "PYI", "RET", "RSE", "RUF", "S", "SIM", "SLF", "T10", "T20", "TCH", "TID", "TRY", "UP", "W", "YTT"]
+select = ["A", "ASYNC", "B", "C4", "C90", "D", "DTZ", "E", "F", "FLY", "I", "ISC", "N", "NPY", "PGH", "PIE", "PLC", "PLE", "PLR", "PLW", "PT", "RET", "RUF", "RSE", "SIM", "TID", "UP", "W", "YTT"]
 ignore = ["E501", "ISC001", "RET504", "S101"]
+{%- if development_environment == "strict" %}
+extend-select = ["BLE", "EM", "ERA", "G", "ICN", "INP", "PTH", "PYI", "RSE", "S", "SLF", "T10", "T20", "TCH", "TRY"]
 unfixable = ["ERA001", "F401", "F841", "T201", "T203"]
 {%- else %}
-select = ["A", "ASYNC", "B", "C4", "C90", "D", "DTZ", "E", "F", "FLY", "I", "ISC", "N", "NPY", "PGH", "PIE", "PLC", "PLE", "PLR", "PLW", "PT", "RET", "RUF", "RSE", "SIM", "TID", "UP", "W", "YTT"]
-ignore = ["E501", "S307", "G010", "PGH003", "RET504", "S101"]
+extend-ignore = ["S307", "G010", "PGH003"]
 unfixable = ["F401", "F841"]
 {%- endif %}
 
@@ -259,6 +265,7 @@ convention = "{{ docstring_style|lower }}"
 
 [tool.ruff.format]
 line-ending = "auto"
+docstring-code-format = true
 {%- elif formatter == 'Black' %}
 
 [tool.black]
