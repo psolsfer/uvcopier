@@ -42,7 +42,7 @@ classifiers = [
     "Natural Language :: English",
     "Programming Language :: Python :: 3",
 {%- for v in supported_versions %}
-    "Programming Language :: Python :: {{ v }}"{% if not loop.last %},{% endif %}
+    "Programming Language :: Python :: {{ v }}",
 {%- endfor %}
     "Topic :: Scientific/Engineering",
     "Typing :: Typed",
