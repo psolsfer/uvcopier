@@ -132,7 +132,7 @@ def render_jinja_in_defaults(defaults: dict[str, Any], context: dict[str, Any]) 
         if _looks_like_jinja(value):
             # This looks like a Jinja2 template string
             try:
-                rendered_value = _render_jinja_string(env=env, value=value, context=defaults)
+                rendered_value = _render_jinja_string(env=env, value=value, context=context)
                 rendered[key] = _coerce_scalar(rendered_value)
             except (TemplateError, UndefinedError, TemplateSyntaxError) as e:
                 logger.warning("Could not render Jinja2 expression in '%s': %s - %s", key, value, e)
@@ -304,12 +304,15 @@ def render_templates(
         output_path.parent.mkdir(parents=True, exist_ok=True)
 
         # Construct the full path relative to template_root
-        # Use as_posix() to ensure forward slashes for Jinja (cross-platform)
         relative_from_root = template_base.relative_to(template_root) / template_file
-        template_path_str = relative_from_root.as_posix()
 
-        # Load and render the template using Copier's environment
-        template_jinja = env.get_template(template_path_str)
+        # Load the template manually
+        full_template_path = template_root / relative_from_root
+        with open(full_template_path, "r") as f:
+            template_content = f.read()
+
+        # Render the template using Copier's environment from string instead of loading through env
+        template_jinja = env.from_string(template_content)
         result = template_jinja.render(full_context)
 
         # Write the rendered file
