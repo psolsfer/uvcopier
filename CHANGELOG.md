@@ -1,3 +1,10 @@
+## v0.1.3 (2025-10-02)
+
+### Fix
+
+- fix problem rendering templates in render_templates
+- fix trailing comma in pyproject.toml.jinja
+
 ## v0.1.2 (2025-10-02)
 
 ### Feat
