@@ -99,7 +99,7 @@ def lint(c: Context, check: bool = True) -> None:
 
 # Tests
 @task(help={"tox_env": "Environment name to run the test"})
-def test(c: Context, tox_env: str = "py{{ python_version|replace('.', '') }}") -> None: # noqa: PT028
+def test(c: Context, tox_env: str = "py{{ python_version|replace('.', '') }}") -> None:  # noqa: PT028
     """Run tests with tox."""
     _run(c, f"tox -e {tox_env}")
 
@@ -183,7 +183,7 @@ def deploy_docs(c: Context) -> None:
 {%- if docs == 'Github Pages' %}
     _run(c, "mkdocs gh-deploy")
 {%- else %}
-    print("Documentation deployment not configured for this platform.") # noqa: T201
+    print("Documentation deployment not configured for this platform.")  # noqa: T201
 {%- endif %}
 
 
