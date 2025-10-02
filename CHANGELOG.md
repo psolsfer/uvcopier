@@ -1,3 +1,17 @@
+## v0.1.2 (2025-10-02)
+
+### Feat
+
+- improve abilities to render template for test
+
+### Fix
+
+- remove cli file from root of template's project
+
+### Refactor
+
+- update pre-commit ruff legacy alias
+
 ## v0.1.1 (2025-09-11)
 
 ### Refactor
