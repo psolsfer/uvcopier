@@ -124,18 +124,19 @@ cd {{ repository_name }}
 uv sync
 ```
 
-{%- if hooks_tool == 'pre-commit' %}
+{% if hooks_tool == 'pre-commit' -%}
 Install the pre-commit script
+
 ```bash
 uv run pre-commit install
 ```
-{%- elif hooks_tool == 'prek' %}
+{% elif hooks_tool == 'prek' -%}
 Install the prek git hook
+
 ```bash
 uv run prek install
 ```
 {%- endif %}
-
 
 ### Running Tests
 
