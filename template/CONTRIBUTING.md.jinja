@@ -102,14 +102,11 @@ Ready to contribute? Here's how to set up `{{ repository_name }}` for local deve
    install pre-commits:
 
    ```bash
-   uv run prek install
-   ```
-
-   or
-
-   ```bash
+   {%- if hooks_tool == 'pre-commit' %}
    uv run pre-commit install
-   ```
+   {%- elif hooks_tool == 'prek' %}
+   uv run prek install
+   {%- endif %}
 
 4. Create a branch for local development:
 
