@@ -1,3 +1,9 @@
+## v0.1.4 (2025-10-08)
+
+### Feat
+
+- add .editorconfig and .gitattributes to the project
+
 ## v0.1.3 (2025-10-02)
 
 ### Fix
