@@ -4,7 +4,7 @@
 [tox]
 isolated_build = True
 envlist =
-{%- for v in supported_versions %}
+{%- for v in selected_versions %}
     py{{ v.replace('.', '') }},
 {%- endfor %}
     check,
@@ -18,7 +18,7 @@ envlist =
 
 [gh-actions]
 python =
-{%- for v in supported_versions %}
+{%- for v in selected_versions %}
     {{ v }}: py{{ v.replace('.', '') }}{% if loop.last %}, check, lint{% if uses_docs %}, docs{% endif %}{% if use_pytest %}, report{% endif %}{% endif %}
 {%- endfor %}
 
