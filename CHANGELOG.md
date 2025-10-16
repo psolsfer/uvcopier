@@ -1,3 +1,9 @@
+## v0.1.7 (2025-10-16)
+
+### Fix
+
+- fix bug in tox.ini template and increase python version
+
 ## v0.1.6 (2025-10-16)
 
 ## v0.1.5 (2025-10-08)
