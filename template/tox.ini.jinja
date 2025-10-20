@@ -20,7 +20,8 @@ envlist =
 [gh-actions]
 python =
 {%- for v in selected_versions %}
-    {{ v }}: py{{ v.replace('.', '') }}{% if loop.last %}, check, lint{% if uses_docs %}, docs{% endif %}{% if use_pytest %}, report{% endif %}{% endif %}
+    {# {{ v }}: py{{ v.replace('.', '') }}{% if loop.last %}, check, lint{% if uses_docs %}, docs{% endif %}{% if use_pytest %}, report{% endif %}{% endif %} # NOTE loop.last will assign tasks to python 3.15, which is stil experimental #}
+    {{ v }}: py{{ v.replace('.', '') }}{% if loop.revindex == 2 %}, check, lint{% if uses_docs %}, docs{% endif %}{% if use_pytest %}, report{% endif %}{% endif %} {# # NOTE loop.revindex == 2 assigns tasks to python 3.14 (second to last), which is stil experimental #}
 {%- endfor %}
 
 [testenv]
