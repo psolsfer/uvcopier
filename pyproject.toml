@@ -1,6 +1,6 @@
 [project]
 name = "uvcopier"
-version = "0.1.7"
+version = "0.2.0"
 description = "A Copier template for creating Python packages with uv."
 authors = [
     {name = "Pablo Solís-Fernández", email = "psolsfer@gmail.com"},
@@ -62,7 +62,7 @@ dev = [
 bump_message = "bump(release): v$current_version → v$new_version"
 tag_format = "v$version"
 update_changelog_on_bump = true
-version = "0.1.7"
+version = "0.2.0"
 version_files = [
     "pyproject.toml:version",
 ]
