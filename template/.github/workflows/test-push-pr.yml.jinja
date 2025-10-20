@@ -23,6 +23,11 @@ jobs:
           "{{ v }}"{% if not loop.last %},{% endif %}
 {%- endfor %}
         ]
+        include:
+            - python-version: "3.15" # Keeping 3.15 as experimental
+              experimental: true
+      fail-fast: false
+    continue-on-error: {% raw %}${{ matrix.experimental || false }}{% endraw %}
 
     steps:
     - name: Checkout code
@@ -44,46 +49,35 @@ jobs:
     - name: Install dependencies
       run: uv sync --all-extras
 
-{%- if use_pytest %}
-
-    - name: Run tests with pytest
-      run: uv run pytest --cov={{ package_import_name }} --cov-report=xml --cov-report=term-missing
-
-{%- else %}
-
-    - name: Run tests with unittest
-      run: uv run python -m unittest discover
-
-{%- endif %}
-
-    - name: Run linting
-      run: |
-        uv run ruff check .
-{%- if formatter == "Ruff-format" %}
-        uv run ruff format --check .
-{%- elif formatter == "Black" %}
-        uv run black --check .
-{%- endif %}
-
-    - name: Run type checking
-      run: uv run mypy src/{{ package_import_name }}
-
+{#- # NOTE These were duplicated in tox.ini
+#{%- if use_pytest %}
+#
+#    - name: Run tests with pytest
+#      run: uv run pytest --cov={{ package_import_name }} --cov-report=xml --cov-report=term-missing
+#
+#{%- else %}
+#
+#    - name: Run tests with unittest
+#      run: uv run python -m unittest discover
+#
+#{%- endif %}
+#
+#    - name: Run linting
+#      run: |
+#        uv run ruff check .
+#{%- if formatter == "Ruff-format" %}
+#        uv run ruff format --check .
+#{%- elif formatter == "Black" %}
+#        uv run black --check .
+#{%- endif %}
+#
+#    - name: Run type checking
+#      run: uv run mypy src/{{ package_import_name }}
+-#}
 {%- if development_environment == "strict" %}
 
     - name: Run security checks
       run: uv run pip-audit
-
-{%- endif %}
-{%- if use_pytest %}
-
-    - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v4
-      if: matrix.os == 'ubuntu-latest' && matrix.python-version == '{{ python_version }}'
-      with:
-        file: ./coverage.xml
-        flags: unittests
-        name: codecov-umbrella
-        fail_ci_if_error: false
 
 {%- endif %}
 
@@ -110,3 +104,16 @@ jobs:
 
     - name: Run tox
       run: tox
+
+{%- if use_pytest %}
+
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v4
+      if: matrix.os == 'ubuntu-latest' && matrix.python-version == '{{ python_version }}'
+      with:
+        file: ./coverage.xml
+        flags: unittests
+        name: codecov-umbrella
+        fail_ci_if_error: false
+
+{%- endif %}

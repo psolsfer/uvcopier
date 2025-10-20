@@ -3,6 +3,7 @@
 
 [tox]
 isolated_build = True
+skip_missing_interpreters = true
 envlist =
 {%- for v in selected_versions %}
     py{{ v.replace('.', '') }},
@@ -40,11 +41,19 @@ commands =
 
 {%- if use_pytest %}
 
-[testenv:py313]
+[testenv:py313] {# # ??? Should this be updated to 3.14? #}
 depends = clean
 commands_pre = uv sync --group test
 commands =
-    uv run pytest --basetemp={envtmpdir} --cov --cov-append
+    uv run pytest --basetemp={envtmpdir} --cov={{ package_import_name }} --cov-report=xml --cov-report=term-missing --cov-append
+
+[testenv:py315]
+description = Experimental Python 3.15 environment
+commands_pre =
+    uv run python -c "print('Running under experimental Python 3.15 — failures are allowed in CI.')"
+    uv sync --group test
+commands =
+    uv run pytest --basetemp={envtmpdir}
 
 {%- endif %}
 
@@ -92,8 +101,9 @@ description = Generate coverage reports
 deps = tox-uv
 commands_pre = uv sync --group test
 commands =
-    uv run coverage report
-    uv run coverage html
+    uv run coverage combine
+    uv run coverage report || true
+    uv run coverage html || true
 
 [testenv:clean]
 description = Clean coverage data
