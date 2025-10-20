@@ -24,74 +24,72 @@ python =
 {%- endfor %}
 
 [testenv]
-# Use uv for faster dependency resolution and installation
+# https://hynek.me/articles/turbo-charge-tox/ explains the inclusion of the next 2 lines
 package = wheel
 wheel_build_env = .pkg
 setenv = PYTHONPATH = {toxinidir}
 deps = tox-uv
 skip_install = true
 allowlist_externals = uv
-commands_pre = uv sync --group test
+setup_cmd = uv sync
 commands =
 {%- if use_pytest %}
-    uv run pytest --basetemp={envtmpdir}
+    pytest --basetemp={envtmpdir}
 {%- else %}
-    uv run python -m unittest discover
+    python -m unittest discover
 {%- endif %}
 
 {%- if use_pytest %}
 
 [testenv:py313] {# # ??? Should this be updated to 3.14? #}
 depends = clean
-commands_pre = uv sync --group test
 commands =
-    uv run pytest --basetemp={envtmpdir} --cov={{ package_import_name }} --cov-report=xml --cov-report=term-missing --cov-append
+    pytest --basetemp={envtmpdir} --cov={{ package_import_name }} --cov-report=xml --cov-report=term-missing --cov-append
 
 [testenv:py315]
 description = Experimental Python 3.15 environment
 commands_pre =
-    uv run python -c "print('Running under experimental Python 3.15 — failures are allowed in CI.')"
-    uv sync --group test
+    python -c "print('Running under experimental Python 3.15 — failures are allowed in CI.')"
 commands =
-    uv run pytest --basetemp={envtmpdir}
+    pytest --basetemp={envtmpdir}
 
 {%- endif %}
 
 [testenv:check]
 description = Format and check the code base
 skip_install = true
-deps = tox-uv
-commands_pre = uv sync --group dev
+deps =
+    tox-uv
 {%- if hooks_tool == 'pre-commit' %}
+    pre-commit-uv>=4.1.4
 commands =
-    uv run pre-commit run --all-files --show-diff-on-failure
+    pre-commit run --all-files --show-diff-on-failure
 {%- elif hooks_tool == 'prek' %}
+
 commands =
-    uv run prek run --all-files --show-diff-on-failure
+    prek run --all-files --show-diff-on-failure
 {%- endif %}
 
 [testenv:lint]
 description = Run all linting/formatting checks
 basepython = python
 deps = tox-uv
-commands_pre = uv sync --group test
 commands =
-    uv run ruff check src/{{ package_import_name }} tests
+    ruff check src/{{ package_import_name }} tests
 {%- if formatter == 'Black' %}
-    uv run black --check src/{{ package_import_name }} tests
+    black --check src/{{ package_import_name }} tests
 {%- elif formatter == 'Ruff-format' %}
-    uv run ruff format --check src/{{ package_import_name }} tests
+    ruff format --check src/{{ package_import_name }} tests
 {%- endif %}
-    uv run mypy src/{{ package_import_name }}
+    mypy src/{{ package_import_name }}
 
 {%- if uses_docs %}
 
 [testenv:docs]
 description = Build documentation
 deps = tox-uv
-commands_pre = uv sync --group docs
 commands =
-    uv run mkdocs build
+    mkdocs build
 
 {%- endif %}
 {%- if use_pytest %}
@@ -99,17 +97,14 @@ commands =
 [testenv:report]
 description = Generate coverage reports
 deps = tox-uv
-commands_pre = uv sync --group test
 commands =
-    uv run coverage combine
-    uv run coverage report || true
-    uv run coverage html || true
+    coverage report || true
+    coverage html || true
 
 [testenv:clean]
 description = Clean coverage data
 deps = tox-uv
-commands_pre = uv sync --group test
 commands =
-    uv run coverage erase
+    coverage erase
 
 {%- endif %}
