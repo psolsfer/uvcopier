@@ -33,7 +33,7 @@ setenv = PYTHONPATH = {toxinidir}
 deps = tox-uv
 skip_install = true
 allowlist_externals = uv
-commands_pre = uv pip install -e. --all-extras --group dev -r ./pyproject.toml -q
+commands_pre = uv pip install -e. --all-extras --group test -r ./pyproject.toml -q
 commands =
 {%- if use_pytest %}
     pytest --basetemp={envtmpdir} --junitxml=reports/pytest-{envname}.xml --cov --cov-append
