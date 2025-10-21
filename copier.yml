@@ -240,7 +240,7 @@ uses_hook_tool:
   when: false
 
 all_py_versions:
-  default: ["3.9", "3.10", "3.11", "3.12", "3.13", "3.14", "3.15"]
+  default: ["3.9", "3.10", "3.11", "3.12", "3.13", "3.14"]
   type: json  # ensure it’s interpreted as a list, not a string
   when: false  # do not ask the user, just inject it
 

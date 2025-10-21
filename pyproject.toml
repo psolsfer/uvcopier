@@ -42,6 +42,12 @@ classifiers = [
 Homepage = "https://github.com/psolsfer/uvcopier"
 Repository = "https://github.com/psolsfer/uvcopier"
 
+[tool.setuptools]
+packages = []
+
+[tool.setuptools.package-data]
+"*" = ["template/**/*", "copier.yml"]
+
 [dependency-groups]
 dev = [
     "click>=8.2.1",
@@ -56,6 +62,14 @@ dev = [
     "tox",
     "tox-uv>=1.28.0",
     "commitizen>=4.9.1",
+]
+docs = [
+    "mkdocs>=1.5.3",
+    "mkdocs-awesome-pages-plugin>=2.9.2",
+    "mkdocs-include-markdown-plugin>=6.0",
+    "mkdocs-material>=9.4.2",
+    "mkdocs-material-extensions>=1.2",
+    "mkdocstrings[python]>=0.23.0",
 ]
 
 [tool.commitizen]

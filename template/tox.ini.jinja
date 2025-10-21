@@ -1,5 +1,6 @@
 {%- set min_index = all_py_versions.index(python_version) -%}
 {%- set selected_versions = all_py_versions[min_index:] -%}
+{%- set stable_max_version = selected_versions[-1] %}
 
 [tox]
 basepython = python3
@@ -21,8 +22,7 @@ envlist =
 [gh-actions]
 python =
 {% for v in selected_versions %}
-    {#- {{ v }}: py{{ v.replace('.', '') }}{% if loop.last %}, check, lint{% if uses_docs %}, docs{% endif %}{% if use_pytest %}, report{% endif %}{% endif %} # NOTE loop.last will assign tasks to python 3.15, which is stil experimental -#}
-    {{ v }}: py{{ v.replace('.', '') }}{% if loop.revindex == 2 %}, check, lint{% if uses_docs %}, docs{% endif %}{% if use_pytest %}, report{% endif %}{% endif %} {# # NOTE loop.revindex == 2 assigns tasks to python 3.14 (second to last), which is stil experimental #}
+    {{ v }}: py{{ v.replace('.', '') }}{% if loop.last %}, check, lint{% if uses_docs %}, docs{% endif %}{% if use_pytest %}, report{% endif %}{% endif %}
 {% endfor %}
 
 [testenv]
@@ -33,27 +33,21 @@ setenv = PYTHONPATH = {toxinidir}
 deps = tox-uv
 skip_install = true
 allowlist_externals = uv
-setup_cmd = uv sync --all-extras
+commands_pre = uv pip install -e. --all-extras -r ./pyproject.toml -q
 commands =
 {%- if use_pytest %}
-    pytest --basetemp={envtmpdir} --junitxml=reports/pytest-{envname}.xml
+    pytest --basetemp={envtmpdir} --junitxml=reports/pytest-{envname}.xml --cov --cov-append
 {%- else %}
     python -m unittest discover
 {%- endif %}
 
 {%- if use_pytest %}
 
-[testenv:py313] {# # ??? Should this be updated to 3.14? #}
+[testenv:py{{ stable_max_version.replace('.', '') }}]
+description = Run tests with coverage on Python {{ stable_max_version }}
 depends = clean
 commands =
-    pytest --basetemp={envtmpdir} --cov-append --junitxml=reports/pytest-{envname}.xml
-
-[testenv:py315]
-description = Experimental Python 3.15 environment
-commands_pre =
-    python -c "print('Running under experimental Python 3.15 — failures are allowed in CI.')"
-commands =
-    pytest --basetemp={envtmpdir} --junitxml=reports/pytest-{envname}.xml
+    pytest --basetemp={envtmpdir} --junitxml=reports/pytest-{envname}.xml --cov --cov-append
 
 {%- endif %}
 
@@ -71,7 +65,7 @@ commands =
 
 [testenv:lint]
 description = Run all linting/formatting checks
-basepython = python
+basepython = python{{ stable_max_version }}
 commands =
     ruff check src/{{ package_import_name }} tests
 {%- if formatter == 'Black' %}
@@ -79,7 +73,12 @@ commands =
 {%- elif formatter == 'Ruff-format' %}
     ruff format --check src/{{ package_import_name }} tests
 {%- endif %}
-    mypy --junit-xml reports/mypy.xml src/{{ package_import_name }}
+
+[testenv:type]
+description = Run mypy checks
+basepython = python{{ python_version }} {#- # NOTE Use minimum supported version #}
+commands =
+    mypy --junit-xml reports/mypy.xml src/pyauxlib
 
 {%- if uses_docs %}
 
@@ -95,7 +94,7 @@ commands =
 description = Generate coverage reports
 ignore_errors = True
 commands =
-;    coverage combine
+    ; coverage combine
     coverage report
     coverage html
 

@@ -23,11 +23,7 @@ jobs:
           "{{ v }}"{% if not loop.last %},{% endif %}
 {%- endfor %}
         ]
-        include:
-            - python-version: "3.15" # Keeping 3.15 as experimental
-              experimental: true
       fail-fast: false
-    continue-on-error: {% raw %}${{ matrix.experimental || false }}{% endraw %}
 
     steps:
     - name: Checkout code
