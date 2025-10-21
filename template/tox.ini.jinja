@@ -21,8 +21,8 @@ envlist =
 
 [gh-actions]
 python =
-{% for v in selected_versions %}
-    {{ v }}: py{{ v.replace('.', '') }}{% if loop.last %}, check, lint{% if uses_docs %}, docs{% endif %}{% if use_pytest %}, report{% endif %}{% endif %}
+{%- for v in selected_versions %}
+    {{ v }}: py{{ v.replace('.', '') }}{% if loop.last %}, check, lint{% if uses_docs %}, docs{% endif %}{% if use_pytest %}, report{% endif %}{% endif -%}
 {% endfor %}
 
 [testenv]
@@ -33,7 +33,7 @@ setenv = PYTHONPATH = {toxinidir}
 deps = tox-uv
 skip_install = true
 allowlist_externals = uv
-commands_pre = uv pip install -e. --all-extras -r ./pyproject.toml -q
+commands_pre = uv pip install -e. --all-extras --group dev -r ./pyproject.toml -q
 commands =
 {%- if use_pytest %}
     pytest --basetemp={envtmpdir} --junitxml=reports/pytest-{envname}.xml --cov --cov-append
