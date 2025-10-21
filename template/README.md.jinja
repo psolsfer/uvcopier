@@ -16,7 +16,7 @@
 
 {%- if not private_package_repository_name %}
 [![PyPI - Version][pypi-badge]][pypi-url] [![PyPI - Downloads][pypi-downloads]][pypi-url] [![PyPI - Python Version][python-versions]][pypi-url]<br/>
-![GitHub commit activity][commit-activity] ![GitHub commits since latest release][commits-since-latest] [![GitHub last commit][last-commit]][last-commit-url] [![GitHub Release Date][release-date]][release-date-url]
+[![GitHub commit activity][commit-activity]][github-commits] [![GitHub commits since latest release][commits-since-latest]][github-commits] [![GitHub last commit][last-commit]][last-commit-url] [![GitHub Release Date][release-date]][release-date-url]
 {%- endif %}<br/>
 [![CI - Tests][ci-badge]][ci-url] [![CD - Publish][cd-badge]][cd-url] [![GitHub stars][stars-badge]][github-url] [![GitHub forks][forks-badge]][github-url] [![GitHub issues][issues-badge]][issues-url]<br/>
 [![Linting - Ruff][ruff-badge]][ruff-url]
@@ -196,7 +196,7 @@ This package was created with [Copier](https://github.com/copier-org/copier) and
 [release-date]: https://img.shields.io/github/release-date/{{ repository_namespace }}/{{ repository_name }}?logo=github&label=Release%20Date&style=for-the-badge
 [last-commit-url]: https://github.com/{{ repository_namespace }}/{{ repository_name }}/commit/main
 [release-date-url]: https://github.com/{{ repository_namespace }}/{{ repository_name }}/releases/latest
-
+[github-commits]: https://github.com/{{ repository_namespace }}/{{ repository_name }}/commits/main/
 
 [pypi-downloads]: https://img.shields.io/pypi/dm/{{ package_distribution_name }}.svg?color=blue&label=Downloads&logo=pypi&logoColor=gold&style=for-the-badge
 [python-versions]: https://img.shields.io/pypi/pyversions/{{ package_distribution_name }}.svg?logo=python&label=Python&logoColor=gold&style=for-the-badge

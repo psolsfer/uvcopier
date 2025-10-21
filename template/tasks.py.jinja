@@ -298,6 +298,7 @@ def install(c: Context) -> None:
     """Install the package and the prek hooks."""
 {%- endif %}
 
+{# # TODO Replace pipx with uvx #}
 # pipx
 @task
 def install_pipx(c: Context) -> None:

@@ -2,6 +2,7 @@
 {%- set selected_versions = all_py_versions[min_index:] -%}
 
 [tox]
+basepython = python3
 isolated_build = True
 skip_missing_interpreters = true
 envlist =
@@ -32,10 +33,10 @@ setenv = PYTHONPATH = {toxinidir}
 deps = tox-uv
 skip_install = true
 allowlist_externals = uv
-setup_cmd = uv sync
+setup_cmd = uv sync --all-extras
 commands =
 {%- if use_pytest %}
-    pytest --basetemp={envtmpdir}
+    pytest --basetemp={envtmpdir} --junitxml=reports/pytest-{envname}.xml
 {%- else %}
     python -m unittest discover
 {%- endif %}
@@ -45,14 +46,14 @@ commands =
 [testenv:py313] {# # ??? Should this be updated to 3.14? #}
 depends = clean
 commands =
-    pytest --basetemp={envtmpdir} --cov={{ package_import_name }} --cov-report=xml --cov-report=term-missing --cov-append
+    pytest --basetemp={envtmpdir} --cov-append --junitxml=reports/pytest-{envname}.xml
 
 [testenv:py315]
 description = Experimental Python 3.15 environment
 commands_pre =
     python -c "print('Running under experimental Python 3.15 — failures are allowed in CI.')"
 commands =
-    pytest --basetemp={envtmpdir}
+    pytest --basetemp={envtmpdir} --junitxml=reports/pytest-{envname}.xml
 
 {%- endif %}
 
@@ -74,7 +75,6 @@ commands =
 [testenv:lint]
 description = Run all linting/formatting checks
 basepython = python
-deps = tox-uv
 commands =
     ruff check src/{{ package_import_name }} tests
 {%- if formatter == 'Black' %}
@@ -82,13 +82,12 @@ commands =
 {%- elif formatter == 'Ruff-format' %}
     ruff format --check src/{{ package_import_name }} tests
 {%- endif %}
-    mypy src/{{ package_import_name }}
+    mypy --junit-xml reports/mypy.xml src/{{ package_import_name }}
 
 {%- if uses_docs %}
 
 [testenv:docs]
 description = Build documentation
-deps = tox-uv
 commands =
     mkdocs build
 
@@ -97,14 +96,14 @@ commands =
 
 [testenv:report]
 description = Generate coverage reports
-deps = tox-uv
+ignore_errors = True
 commands =
-    coverage report || true
-    coverage html || true
+    coverage combine
+    coverage report
+    coverage html
 
 [testenv:clean]
 description = Clean coverage data
-deps = tox-uv
 commands =
     coverage erase
 
