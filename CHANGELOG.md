@@ -1,3 +1,11 @@
+## v0.3.0 (2025-10-21)
+
+### Fix
+
+- fixes in template
+- small fixes
+- correct small fixes in the template
+
 ## v0.2.0 (2025-10-20)
 
 ## v0.1.7 (2025-10-16)
