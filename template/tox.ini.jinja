@@ -20,10 +20,10 @@ envlist =
 
 [gh-actions]
 python =
-{%- for v in selected_versions %}
-    {# {{ v }}: py{{ v.replace('.', '') }}{% if loop.last %}, check, lint{% if uses_docs %}, docs{% endif %}{% if use_pytest %}, report{% endif %}{% endif %} # NOTE loop.last will assign tasks to python 3.15, which is stil experimental #}
+{% for v in selected_versions %}
+    {#- {{ v }}: py{{ v.replace('.', '') }}{% if loop.last %}, check, lint{% if uses_docs %}, docs{% endif %}{% if use_pytest %}, report{% endif %}{% endif %} # NOTE loop.last will assign tasks to python 3.15, which is stil experimental -#}
     {{ v }}: py{{ v.replace('.', '') }}{% if loop.revindex == 2 %}, check, lint{% if uses_docs %}, docs{% endif %}{% if use_pytest %}, report{% endif %}{% endif %} {# # NOTE loop.revindex == 2 assigns tasks to python 3.14 (second to last), which is stil experimental #}
-{%- endfor %}
+{% endfor %}
 
 [testenv]
 # https://hynek.me/articles/turbo-charge-tox/ explains the inclusion of the next 2 lines
@@ -60,14 +60,11 @@ commands =
 [testenv:check]
 description = Format and check the code base
 skip_install = true
-deps =
-    tox-uv
 {%- if hooks_tool == 'pre-commit' %}
     pre-commit-uv>=4.1.4
 commands =
     pre-commit run --all-files --show-diff-on-failure
 {%- elif hooks_tool == 'prek' %}
-
 commands =
     prek run --all-files --show-diff-on-failure
 {%- endif %}
@@ -98,7 +95,7 @@ commands =
 description = Generate coverage reports
 ignore_errors = True
 commands =
-    coverage combine
+;    coverage combine
     coverage report
     coverage html
 

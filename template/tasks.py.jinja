@@ -279,7 +279,7 @@ def install_package(c: Context) -> None:
     """Install the package to the active Python's site-packages."""
     _run(c, "uv sync")
 
-{%- if hooks_tool == 'pre-commit' %}
+{% if hooks_tool == 'pre-commit' %}
 @task
 def pre_commit_install(c: Context) -> None:
     """Install pre-commit hooks."""
@@ -288,7 +288,7 @@ def pre_commit_install(c: Context) -> None:
 @task(pre=[install_package, pre_commit_install])
 def install(c: Context) -> None:
     """Install the package and the pre-commit hooks."""
-{%- elif hooks_tool == 'prek' %}
+{% elif hooks_tool == 'prek' %}
 def prek_install(c: Context) -> None:
     """Install prek hooks."""
     _run(c, "prek install")
@@ -298,7 +298,7 @@ def install(c: Context) -> None:
     """Install the package and the prek hooks."""
 {%- endif %}
 
-{# # TODO Replace pipx with uvx #}
+{# # TODO Replace pipx with uvx -#}
 # pipx
 @task
 def install_pipx(c: Context) -> None:
