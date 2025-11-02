@@ -77,6 +77,8 @@ repos:
 {%- if has_cli %}
 {%- if command_line_interface|lower == 'click' %}
           click,
+{%- elif command_line_interface|lower == 'cyclopts' %}
+          cyclopts,
 {%- elif command_line_interface|lower == 'typer' %}
           typer,
 {%- endif %}

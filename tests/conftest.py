@@ -115,7 +115,14 @@ COMMON_PROJECT_CONTEXTS = {
         "create_author_file": True,
         "development_environment": "strict",
     },
-    "cli_typer": {
+    "cli_cyclopts": {
+        "project_name": "Cyclopts CLI Project",
+        "project_short_description": "A project with Cyclopts CLI",
+        "command_line_interface": "Cyclopts",
+        "docs": "Github Pages",
+        "with_pydantic_typing": True,
+    },
+    "cli_test_bake_with_console_script_files": {
         "project_name": "Typer CLI Project",
         "project_short_description": "A project with Typer CLI",
         "command_line_interface": "Typer",
@@ -201,6 +208,8 @@ def validate_pyproject_toml(project_path: Path, context: dict[str, Any]) -> None
     cli_choice = context.get("command_line_interface", "No CLI")
     if cli_choice == "Click":
         assert any("click" in dep for dep in dependencies), "Click dependency should be present"
+    elif cli_choice == "Cyclopts":
+        assert any("cyclopts" in dep for dep in dependencies), "Cyclopts dependency should be present"
     elif cli_choice == "Typer":
         assert any("typer" in dep for dep in dependencies), "Typer dependency should be present"
 

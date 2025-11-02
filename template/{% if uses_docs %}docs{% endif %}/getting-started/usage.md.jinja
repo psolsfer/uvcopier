@@ -23,6 +23,9 @@ import {{ package_import_name }}
 {%- if command_line_interface|lower == 'typer' %}
 # Run a command (example)
 {{ package_command_line_name }} hello
+{%- elif command_line_interface|lower == 'cyclopts' %}
+# Run the main command
+{{ package_command_line_name }}
 {%- else %}
 # Run the main command
 {{ package_command_line_name }}

@@ -176,6 +176,7 @@ command_line_interface:
   help: Command-line interface framework to use
   choices:
     - No CLI
+    - Cyclopts
     - Click
     - Typer
     - Argparse

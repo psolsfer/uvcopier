@@ -16,6 +16,8 @@ logging.basicConfig(level=logging.INFO, format="%(message)s")
 output_folder = Path("template_tests")
 template_folder = Path("template")
 
+# TODO # FIXME WHat about using bake_copier_template from test_template instead?
+
 
 def _looks_like_jinja(value: Any) -> bool:
     """Check if an object looks like a Jinja2 expression."""
@@ -336,6 +338,7 @@ context = {
     "formatter": "No",
     "open_source_license": "BSD-3-Clause",
     "private_package_repository_name": None,
+    "command_line_interface": "Cyclopts",
 }
 
 

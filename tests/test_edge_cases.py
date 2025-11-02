@@ -283,7 +283,7 @@ def test_boundary_python_versions():
 def test_all_cli_options():
     """Test all CLI framework options."""
 
-    cli_options = ["No CLI", "Click", "Typer", "Argparse"]
+    cli_options = ["No CLI", "Cyclopts", "Click", "Typer", "Argparse"]
     template_path = Path.cwd()
     temp_dir = Path(tempfile.mkdtemp(prefix="cli_test_"))
 
@@ -360,6 +360,9 @@ def test_all_cli_options():
 
                 if cli_option == "Click" and "import click" not in cli_content:
                     print("  Click import missing from CLI file")
+                    continue
+                elif cli_option == "Cyclopts" and "from cyclopts import App" not in cli_content:
+                    print("  Cyclopts import missing from CLI file")
                     continue
                 elif cli_option == "Typer" and "import typer" not in cli_content:
                     print("  Typer import missing from CLI file")

@@ -12,7 +12,7 @@ import warnings
 from collections.abc import Generator
 from contextlib import contextmanager
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any
 
 import copier
 import pytest
@@ -91,6 +91,7 @@ def prebuilt_env(
             "mypy>=1.6.0",
             "black>=23.9.0",
             "click>=7.0",
+            "cyclopts>=4.0.0",
             "typer>=0.15.0",
             "pydantic>=2.4.0",
             "mkdocs>=1.5.3",
@@ -149,7 +150,7 @@ def inside_dir(dirpath: str | Path) -> Generator[None, None, None]:
 
 @contextmanager
 def bake_copier_template(
-    template_path: Path, extra_context: Dict[str, Any] = None, temp_dir: Path = None
+    template_path: Path, extra_context: dict[str, Any] = None, temp_dir: Path = None
 ) -> Generator[CopierResult, None, None]:
     """Generate a project using Copier and clean up afterward."""
 
@@ -336,7 +337,7 @@ class TestCopierTemplate:
                 readme_content = readme_file.read_text()
                 assert "License" not in readme_content
 
-    @pytest.mark.parametrize("interface", ["No CLI", "Click", "Typer", "Argparse"])
+    @pytest.mark.parametrize("interface", ["No CLI", "Cyclopts", "Click", "Typer", "Argparse"])
     def test_bake_with_console_script_files(self, template_path, interface):
         """Test that CLI files are created correctly based on interface choice."""
         context = {"command_line_interface": interface}
@@ -423,6 +424,41 @@ class TestCopierTemplate:
 
                 # Test default command
                 default_result = runner.invoke(cli_module.app)
+                assert default_result.exit_code == 0
+
+            finally:
+                sys.path.remove(str(project_path / "src"))
+
+    def test_bake_with_cyclopts_cli(self, template_path, prebuilt_env):
+        """Test the generated Cyclopts CLI actually works."""
+        context = {"command_line_interface": "Cyclopts"}
+
+        with bake_copier_template(template_path, context) as result:
+            project_path, project_slug, project_dir = project_info(result)
+
+            cli_file = project_dir / "cli.py"
+            if not cli_file.exists():
+                pytest.skip("CLI file not generated")
+
+            sys.path.insert(0, str(project_path / "src"))
+            try:
+                module_name = f"{project_slug.replace('-', '_')}.cli"
+                spec = importlib.util.spec_from_file_location(module_name, cli_file)
+                cli_module = importlib.util.module_from_spec(spec)
+                spec.loader.exec_module(cli_module)
+
+                # Test CLI with Cyclopts
+                # Note: Cyclopts doesn't have a testing runner like Click/Typer
+                # We test by calling the app directly
+                from cyclopts.testing import runner
+
+                # Test help command
+                help_result = runner(cli_module.app, ["--help"])
+                assert help_result.exit_code == 0
+                assert "CLI" in help_result.output or "help" in help_result.output.lower()
+
+                # Test default command
+                default_result = runner(cli_module.app, [])
                 assert default_result.exit_code == 0
 
             finally:

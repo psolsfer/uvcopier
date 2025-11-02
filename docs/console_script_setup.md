@@ -2,11 +2,11 @@
 
 ----
 
-Optionally, your package can include a console script using Click, Typer or argparse.
+Optionally, your package can include a console script using Cyclopts, Click, Typer or argparse.
 
 ## How It Works
 
-If the 'command_line_interface' option is set to ['click'], ['typer'] or ['argparse'] during setup, the project will contain the file 'cli.py' in the project_slug subdirectory. An entry point is added to pyproject.toml that points to the main function in cli.py.
+If the 'command_line_interface' option is set to ['cyclopts'], ['click'], ['typer'] or ['argparse'] during setup, the project will contain the file 'cli.py' in the project_slug subdirectory. An entry point is added to pyproject.toml that points to the main function in cli.py.
 
 ## Usage
 
@@ -28,4 +28,4 @@ shows help about the package.
 
 ## More Details
 
-Click the links to obtain more information about [Typer](https://typer.tiangolo.com/) and [Click](http://click.pocoo.org/).
+Click the links to obtain more information about [Cyclopts](https://cyclopts.readthedocs.io/), [Typer](https://typer.tiangolo.com/) and [Click](http://click.pocoo.org/).

@@ -8,6 +8,9 @@ import sys
 {%- if command_line_interface|lower == 'click' %}
 import click
 {%- endif %}
+{%- if command_line_interface|lower == 'cyclopts' %}
+from cyclopts import App
+{%- endif %}
 {%- if command_line_interface|lower == 'typer' %}
 import typer
 {%- endif %}
@@ -22,6 +25,20 @@ def main(args=None):
                "{{ package_import_name }}.cli.main")
     click.echo("See click documentation at https://click.palletsprojects.com/")
     return 0
+
+
+{%- elif command_line_interface|lower == 'cyclopts' %}
+
+
+app = App(help="{{ project_name }} CLI")
+
+
+@app.default
+def main() -> None:
+    """Console script for {{ package_import_name }}."""
+    print("Replace this message by putting your code into "
+          "{{ package_import_name }}.cli.main")
+    print("See Cyclopts documentation at https://cyclopts.readthedocs.io/")
 
 
 {%- elif command_line_interface|lower == 'typer' %}
@@ -60,7 +77,7 @@ def main():
 {%- endif %}
 
 if __name__ == "__main__":
-{%- if command_line_interface|lower == 'typer' %}
+{%- if command_line_interface|lower in ['typer', 'cyclopts'] %}
     app()
 {%- else %}
     sys.exit(main())  # pragma: no cover

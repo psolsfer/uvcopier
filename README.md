@@ -68,7 +68,7 @@ A batteries-included template for Python projects using uv for dependency manage
 
 ### Command Line Interface
 
-- Optional CLI integration using [Click], [Typer], or [argparse]
+- Optional CLI integration using [Cyclopts], [Click], [Typer], or [argparse]
 
 ### Development Tasks
 
@@ -128,6 +128,7 @@ The following templates were used as basis and inspiration for the creation of s
 [Coverage.py]: https://coverage.readthedocs.io/
 [Commitizen]: https://commitizen-tools.github.io/commitizen/
 [copier]: <https://copier.readthedocs.io/>
+[Cyclopts]: https://cyclopts.readthedocs.io/
 [Dependabot]: https://github.com/marketplace/actions/release-drafter
 [Invoke]: https://www.pyinvoke.org/
 [JupyterLab]: https://jupyter.org/

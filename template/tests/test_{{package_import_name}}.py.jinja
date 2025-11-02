@@ -14,6 +14,9 @@ import unittest
 
 {%- if command_line_interface|lower == "click" %}
 from click.testing import CliRunner
+{%- elif command_line_interface|lower == "cyclopts" %}
+import re
+from cyclopts.testing import runner
 {%- elif command_line_interface|lower == "typer" %}
 import re
 from typer.testing import CliRunner
@@ -23,7 +26,7 @@ from {{ package_import_name }} import {{ package_import_name }}
 {%- if has_cli %}
 {%- if command_line_interface|lower in ["click", "argparse"] %}
 from {{ package_import_name }} import cli
-{%- elif command_line_interface|lower == "typer" %}
+{%- elif command_line_interface|lower in ["cyclopts", "typer"] %}
 from {{ package_import_name }}.cli import app
 {%- endif %}
 {%- endif %}
@@ -56,6 +59,19 @@ def test_command_line_interface() -> None:
     help_result = runner.invoke(cli.main, ["--help"])
     assert help_result.exit_code == 0
     assert "--help  Show this message and exit." in help_result.output
+
+
+{%- elif command_line_interface|lower == "cyclopts" %}
+
+
+def test_command_line_interface() -> None:
+    """Test the CLI."""
+    result = runner(app, [])
+    assert result.exit_code == 0
+    assert "{{ package_import_name }}.cli.main" in result.output
+    help_result = runner(app, ["--help"])
+    assert help_result.exit_code == 0
+    assert re.search(r"--help\s+Display this message and exit\.", help_result.output) is not None
 
 
 {%- elif command_line_interface|lower == "typer" %}
@@ -130,6 +146,19 @@ class Test{{ package_import_name|title }}(unittest.TestCase):
         help_result = runner.invoke(cli.main, ["--help"])
         assert help_result.exit_code == 0
         assert "--help  Show this message and exit." in help_result.output
+
+
+{%- elif command_line_interface|lower == "cyclopts" %}
+
+
+    def test_command_line_interface(self) -> None:
+        """Test the CLI."""
+        result = runner(app, [])
+        assert result.exit_code == 0
+        assert "{{ package_import_name }}.cli.main" in result.output
+        help_result = runner(app, ["--help"])
+        assert help_result.exit_code == 0
+        assert re.search(r"--help\s+Display this message and exit\.", help_result.output) is not None
 
 
 {%- elif command_line_interface|lower == "typer" %}

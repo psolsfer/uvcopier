@@ -94,7 +94,7 @@ The following package configuration options set up different features for your p
 
 ``command_line_interface``
 
-- Whether to create a console script using Click, Typer or argparse. Console script entry point will match the project_slug. Options: ['No CLI', 'Click', 'Typer', 'Argparse']
+- Whether to create a console script using Cyclopts, Click, Typer or argparse. Console script entry point will match the project_slug. Options: ['No CLI', 'Cyclopts', 'Click', 'Typer', 'Argparse']
 
 ``docs``
 
