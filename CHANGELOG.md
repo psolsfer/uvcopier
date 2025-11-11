@@ -1,3 +1,10 @@
+## v0.3.1 (2025-11-11)
+
+### Fix
+
+- fix templates for tox.in and publish workflow
+- small adjustment to the tox.ini.jinja template
+
 ## v0.3.0 (2025-10-21)
 
 ### Fix
