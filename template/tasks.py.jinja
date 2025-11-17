@@ -1,3 +1,4 @@
+{%- set want_jupyter_lab = with_jupyter in ['Jupyter Lab', 'Both'] -%}
 """
 Tasks for maintaining the {{ project_name }} package.
 
@@ -150,7 +151,7 @@ def safety(c: Context) -> None:
 
 
 {%- endif %}
-{%- if with_jupyter_lab %}
+{%- if want_jupyter_lab %}
 
 
 # Jupyter lab

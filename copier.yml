@@ -190,10 +190,16 @@ docs:
     - No
   default: Read the docs
 
-with_jupyter_lab:
-  type: bool
-  help: Include Jupyter Lab in development dependencies
-  default: false
+with_jupyter:
+  type: str
+  help: Choose which Jupyter components to include in development dependencies
+  choices:
+    - No Jupyter
+    - Kernel only
+    - Jupyter
+    - Jupyter Lab
+    - Both
+  default: No Jupyter
 
 with_pydantic_typing:
   type: bool

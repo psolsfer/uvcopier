@@ -190,7 +190,7 @@ def bake_copier_template(
         "development_environment": "simple",
         "command_line_interface": "No CLI",
         "docs": "False",
-        "with_jupyter_lab": False,
+        "with_jupyter": "No Jupyter",
         "with_pydantic_typing": False,
         "create_author_file": False,
         "docstring_style": "numpy",

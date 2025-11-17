@@ -100,9 +100,9 @@ The following package configuration options set up different features for your p
 
 - Whether to initialize documentation, and where to host it. Options: ['Read the Docs', 'Github Pages', 'No']
 
-``with_jupyter_lab``
+``with_jupyter``
 
-- Adds to JupyterLab to uv's dev dependencies, and an Invoke's task to start Jupyter Lab in the `notebooks/` directory.
+- Choose which Jupyter components to include to uv's dev dependencie: Python kernel only, Classic Notebook, JupyterLab, or both UIs. It also adds an Invoke's task to start Jupyter Lab in the `notebooks/` directory.
 
 ``with_pydantic_typing``
 

@@ -12,6 +12,11 @@
 
 {%- set command_line = command_line_interface|lower -%}
 
+{%- set want_kernel = with_jupyter != 'No Jupyter' -%}
+{%- set want_notebook = with_jupyter in ['Jupyter', 'Both'] -%}
+{%- set want_lab = with_jupyter in ['Jupyter Lab', 'Both'] -%}
+
+
 [build-system]
 requires = ["uv_build>=0.8.5,<1.0"]
 build-backend = "uv_build"
@@ -76,8 +81,14 @@ default-groups = ["dev", "test"{% if uses_docs %}, "docs"{% endif %}]
 
 [dependency-groups]
 dev = [
-{%- if with_jupyter_lab %}
+{%- if want_kernel %}
+    "ipykernel>=7.1.0",
+{%- endif %}
+{%- if want_lab %}
     "jupyterlab>=3.6.3",
+{%- endif %}
+{%- if want_notebook %}
+    "notebook>=7",
 {%- endif %}
     "pip>=23",
     "invoke>=2.2",
@@ -117,7 +128,7 @@ dev = [
 ]
 test = [
 {%- if formatter == 'Black' %}
-{%- if with_jupyter_lab %}
+{%- if want_kernel %}
     "black[jupyter]>=23.9.0",
 {%- else %}
     "black>=23.9.0",
