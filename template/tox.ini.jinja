@@ -84,6 +84,8 @@ commands =
 
 [testenv:docs]
 description = Build documentation
+commands_pre =
+    uv pip install -e . --group docs -r ./pyproject.toml -q
 commands =
     mkdocs build
 
