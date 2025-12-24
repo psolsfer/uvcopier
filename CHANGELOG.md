@@ -1,3 +1,10 @@
+## v0.4.0 (2025-12-24)
+
+### Fix
+
+- **template/tox.ini.jinja**: ensure tox docs env installs mkdocs dependencies
+- expand Jupyter options and simplify dependency generation
+
 ## v0.3.1 (2025-11-11)
 
 ### Fix
