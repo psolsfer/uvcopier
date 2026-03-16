@@ -1,12 +1,4 @@
 {#- Jinja template for pyproject.toml configuration -#}
-{%- set license_classifiers = {
-    'Apache-2.0': 'License :: OSI Approved :: Apache Software License',
-    'BSD-2-Clause': 'License :: OSI Approved :: BSD License',
-    'BSD-3-Clause': 'License :: OSI Approved :: BSD License',
-    'GPL-3.0': 'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
-    'MIT': 'License :: OSI Approved :: MIT License',
-    'Unlicense': 'License :: OSI Approved :: The Unlicense (Unlicense)',
-} -%}
 {%- set min_index = all_py_versions.index(python_version) -%}
 {%- set supported_versions = all_py_versions[min_index:] -%}
 
@@ -41,9 +33,6 @@ classifiers = [
     "Development Status :: 2 - Pre-Alpha",
     "Intended Audience :: Developers",
     "Intended Audience :: Science/Research",
-{%- if is_open_source %}
-    "{{ license_classifiers[open_source_license] }}",
-{%- endif %}
     "Natural Language :: English",
     "Programming Language :: Python :: 3",
 {%- for v in supported_versions %}
