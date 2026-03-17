@@ -1,3 +1,16 @@
+## v0.5.0 (2026-03-17)
+
+### Fix
+
+- correct spurious noqa and unused import in generated files
+- **copier.yml**: quote bare 'No' choices to prevent YAML bool coercion
+- remove unnecessary py.typed in the template
+
+### Refactor
+
+- **render_template.py**: replace manual Jinja rendering with copier.run_copy()
+- update license metadata to comply with PEP 639
+
 ## v0.4.0 (2025-12-24)
 
 ### Fix
