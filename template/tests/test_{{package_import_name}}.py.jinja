@@ -19,7 +19,7 @@ import re
 from typer.testing import CliRunner
 {%- endif %}
 
-from {{ package_import_name }} import {{ package_import_name }}
+from {{ package_import_name }} import {{ package_import_name }}  # noqa: F401
 {%- if has_cli %}
 {%- if command_line_interface|lower in ["click", "argparse"] %}
 from {{ package_import_name }} import cli
