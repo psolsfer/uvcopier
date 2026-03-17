@@ -184,7 +184,7 @@ def deploy_docs(c: Context) -> None:
 {%- if docs == 'Github Pages' %}
     _run(c, "mkdocs gh-deploy")
 {%- else %}
-    print("Documentation deployment not configured for this platform.")  # noqa: T201
+    print("Documentation deployment not configured for this platform."){% if development_environment == 'strict' %}  # noqa: T201{% endif %}
 {%- endif %}
 
 
