@@ -31,7 +31,7 @@ def setup_test_environment():
 
     # Set environment variables for testing
     os.environ["TESTING"] = "1"
-    os.environ["UV_LINK_MODE"] = "symlink"  # Faster linking
+    os.environ["UV_LINK_MODE"] = "copy"  # symlink fails across drives on Windows
 
     yield
 

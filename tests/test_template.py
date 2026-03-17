@@ -12,7 +12,7 @@ import warnings
 from collections.abc import Generator
 from contextlib import contextmanager
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any
 
 import copier
 import pytest
@@ -44,96 +44,34 @@ def handle_remove_readonly(func, path_str, exc):
         func(path_str)
 
 
-@pytest.fixture(scope="session")
-def uv_cache_dir(tmp_path_factory: pytest.TempPathFactory) -> Path:
-    """Create a shared UV cache directory for all tests."""
-    cache_dir = tmp_path_factory.mktemp("uv_cache")
-    return cache_dir
+def run_with_uv(command: str, project_path: Path | str) -> int:
+    """Run a command in a generated project directory via uv.
 
+    - Commands already starting with ``uv`` (e.g. ``uv build``, ``uv run pytest``) are forwarded to
+    the uv executable directly.
+    - Every other command (``ruff check .``, ``mypy .``, …) is wrapped with
+      ``uv run --isolated --with <exe>`` so that uv pulls the tool straight from its global package
+      cache without creating or syncing the project's own venv.
 
-@pytest.fixture(scope="session")
-def prebuilt_env(
-    tmp_path_factory: pytest.TempPathFactory, uv_cache_dir: Path
-) -> Generator[Path, None, None]:
-    """Create and share a prebuilt environment for all tests that need it.
-
-    This speeds up tests by:
-    1. Using uv's fast resolver and installer
-    2. Sharing UV cache across all test environments
-    3. Using uv sync for faster dependency resolution # TODO
+    No shared prebuilt venv is needed — uv's cache is the cache.
     """
-    venv_dir = tmp_path_factory.mktemp("shared_venv")
-
-    # Find the full path to 'uv'
     uv_path = shutil.which("uv")
     if uv_path is None:
-        pytest.skip("uv executable not found in PATH")
+        raise FileNotFoundError("uv not found on PATH")
 
-    try:
-        # Set up UV cache environment
-        env = os.environ.copy()
-        env["UV_CACHE_DIR"] = str(uv_cache_dir)
-        env["UV_NO_PROGRESS"] = "1"  # Disable progress bars in tests
+    parts = shlex.split(command)
+    if parts[0] == "uv":
+        cmd = [uv_path, *parts[1:]]
+    else:
+        # --isolated: skip project-venv sync entirely
+        # --with <exe>: inject the tool from uv's cache
+        cmd = [uv_path, "run", "--isolated", "--with", parts[0], *parts]
 
-        # Create venv using uv (much faster than pip)
-        subprocess.check_call(
-            [uv_path, "venv", str(venv_dir)],
-            env=env,
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL,
-        )
-
-        # Install dependencies in one go (much faster than individual installs)
-        common_deps = [
-            "pytest>=7.4.2",
-            "pytest-cov>=4.1.0",
-            "ruff>=0.8",
-            "mypy>=1.6.0",
-            "black>=23.9.0",
-            "click>=7.0",
-            "typer>=0.15.0",
-            "pydantic>=2.4.0",
-            "mkdocs>=1.5.3",
-            "mkdocs-material>=9.4.2",
-        ]
-
-        # Use uv pip install with all dependencies at once
-        cmd = [uv_path, "pip", "install", "--python", str(venv_dir)] + common_deps
-        subprocess.check_call(
-            cmd,
-            env=env,
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL,
-        )
-
-        yield venv_dir
-
-    finally:
-        shutil.rmtree(venv_dir, onexc=handle_remove_readonly)
-
-
-def run_inside_venv(command: str, venv_dir: Path, project_path: Path | str) -> int:
-    """Run a command inside the prebuilt virtual environment."""
-    venv_bin = venv_dir / ("Scripts" if os.name == "nt" else "bin")
-
-    env = os.environ.copy()
-    env["PATH"] = f"{venv_bin}{os.pathsep}{env['PATH']}"
-    env["VIRTUAL_ENV"] = str(venv_dir)
-    env["UV_PROJECT_ENVIRONMENT"] = str(venv_dir)
-
-    with inside_dir(project_path):
-        result = subprocess.run(
-            shlex.split(command),
-            env=env,
-            capture_output=True,
-            text=True,
-        )
-
-        # Uncomment for debugging
-        # print(f"\nSTDOUT:\n{result.stdout}")
-        # print(f"\nSTDERR:\n{result.stderr}")
-
-        return result.returncode
+    result = subprocess.run(cmd, cwd=str(project_path), capture_output=True, text=True)
+    # Uncomment for debugging:
+    # print(f"\nSTDOUT:\n{result.stdout}")
+    # print(f"\nSTDERR:\n{result.stderr}")
+    return result.returncode
 
 
 @contextmanager
@@ -149,7 +87,7 @@ def inside_dir(dirpath: str | Path) -> Generator[None, None, None]:
 
 @contextmanager
 def bake_copier_template(
-    template_path: Path, extra_context: Dict[str, Any] = None, temp_dir: Path = None
+    template_path: Path, extra_context: dict[str, Any] | None = None, temp_dir: Path | None = None
 ) -> Generator[CopierResult, None, None]:
     """Generate a project using Copier and clean up afterward."""
 
@@ -189,7 +127,7 @@ def bake_copier_template(
         "use_pytest": True,
         "development_environment": "simple",
         "command_line_interface": "No CLI",
-        "docs": "False",
+        "docs": "No",
         "with_jupyter": "No Jupyter",
         "with_pydantic_typing": False,
         "create_author_file": False,
@@ -198,40 +136,47 @@ def bake_copier_template(
 
     if extra_context:
         default_context.update(extra_context)
-        # Update derived values
+        # Re-derive slug-based values, but never stomp keys the caller supplied explicitly.
         project_name = default_context["project_name"]
         project_slug = project_name.lower().replace(" ", "-").replace("_", "-")
         project_dir = temp_dir / project_slug
-        default_context.update(
-            {
-                "repository_name": project_slug,
-                "package_distribution_name": project_slug,
-                "package_import_name": project_slug.replace("-", "_"),
-                "package_command_line_name": project_slug,
-            }
-        )
+        derived = {
+            "repository_name": project_slug,
+            "package_distribution_name": project_slug,
+            "package_import_name": project_slug.replace("-", "_"),
+            "package_command_line_name": project_slug,
+        }
+        for key, val in derived.items():
+            if key not in extra_context:
+                default_context[key] = val
 
+    # Run copier — capture failures without yielding inside the except clause,
+    # which would cause "generator didn't stop after throw()" if the with-body
+    # later raises (e.g. a failing assert re-enters the generator).
+    _exception: Exception | None = None
     try:
-        # Generate project using copier
-        result = copier.run_copy(
+        copier.run_copy(
             src_path=str(template_path),
             dst_path=str(project_dir),
             data=default_context,
-            unsafe=True,  # Equivalent to --trust flag
-            quiet=True,  # Suppress output for cleaner tests
+            defaults=True,  # use copier.yml defaults for anything not in data
+            unsafe=True,  # allow hooks / equivalent to --trust
+            quiet=True,
+            vcs_ref="HEAD",  # read from working tree, bypasses git clone
         )
-
-        # Check if the project directory was created successfully
-        if project_dir.exists():
-            yield CopierResult(project_dir, exit_code=0)
-        else:
-            yield CopierResult(
-                project_dir, exit_code=1, exception=Exception("Project directory was not created")
-            )
     except Exception as e:
-        # Handle any exceptions from copier.run_copy
-        yield CopierResult(project_dir, exit_code=1, exception=e)
+        _exception = e
 
+    if _exception is None and project_dir.exists():
+        bake_result = CopierResult(project_dir, exit_code=0)
+    elif _exception is None:
+        _exception = Exception("Project directory was not created")
+        bake_result = CopierResult(project_dir, exit_code=1, exception=_exception)
+    else:
+        bake_result = CopierResult(project_dir, exit_code=1, exception=_exception)
+
+    try:
+        yield bake_result
     finally:
         if cleanup_temp and temp_dir.exists():
             shutil.rmtree(temp_dir, onexc=handle_remove_readonly)
@@ -261,9 +206,23 @@ class TestCopierTemplate:
     """Main test class for the copier template."""
 
     @pytest.fixture(scope="class")
-    def template_path(self):
-        """Get the template path."""
-        return Path(__file__).parent.parent  # Adjust as needed
+    def baked_default_project(
+        self, template_path: Path, tmp_path_factory: pytest.TempPathFactory
+    ) -> Generator[CopierResult, None, None]:
+        """Bake the default template once, git-init it, and share across all run/build/check tests."""
+        tmp_dir = tmp_path_factory.mktemp("baked_default")
+        with bake_copier_template(template_path, temp_dir=tmp_dir) as result:
+            assert result.exit_code == 0, f"Shared bake failed: {result.exception}"
+            with inside_dir(result.project_path):
+                for cmd in [
+                    ["git", "init"],
+                    ["git", "config", "user.name", "Test"],
+                    ["git", "config", "user.email", "test@example.com"],
+                    ["git", "add", "."],
+                    ["git", "commit", "-m", "initial"],
+                ]:
+                    subprocess.run(cmd, capture_output=True)
+            yield result
 
     def test_bake_with_defaults(self, template_path):
         """Test the default structure and configuration of the baked project."""
@@ -360,7 +319,7 @@ class TestCopierTemplate:
                     pyproject_content = pyproject_file.read_text()
                     assert "[project.scripts]" in pyproject_content
 
-    def test_bake_with_click_cli(self, template_path, prebuilt_env):
+    def test_bake_with_click_cli(self, template_path):
         """Test the generated Click CLI actually works."""
         context = {"command_line_interface": "Click"}
 
@@ -395,7 +354,7 @@ class TestCopierTemplate:
             finally:
                 sys.path.remove(str(project_path / "src"))
 
-    def test_bake_with_typer_cli(self, template_path, prebuilt_env):
+    def test_bake_with_typer_cli(self, template_path):
         """Test the generated Typer CLI actually works."""
         context = {"command_line_interface": "Typer"}
 
@@ -428,7 +387,7 @@ class TestCopierTemplate:
             finally:
                 sys.path.remove(str(project_path / "src"))
 
-    @pytest.mark.parametrize("formatter", ["False", "Black", "Ruff-format"])
+    @pytest.mark.parametrize("formatter", ["No", "Black", "Ruff-format"])
     def test_formatter_configuration(self, template_path, formatter):
         """Test that formatter dependencies are correctly configured."""
         context = {"formatter": formatter}
@@ -457,60 +416,28 @@ class TestCopierTemplate:
             "mypy .",
         ],
     )
-    def test_bake_and_run_quality_checks(self, template_path, prebuilt_env, command):
+    def test_bake_and_run_quality_checks(self, baked_default_project: CopierResult, command: str):
         """Test that quality checks pass on generated projects."""
-        with bake_copier_template(template_path) as result:
-            if result.exception:
-                pytest.fail(f"Template generation failed: {result.exception}")
+        return_code = run_with_uv(command, baked_default_project.project_path)
+        assert return_code == 0, f"Quality check '{command}' should pass"
 
-            # Initialize git
-            with inside_dir(result.project_path):
-                subprocess.run(["git", "init"], capture_output=True)
-                subprocess.run(["git", "config", "user.name", "Test"], capture_output=True)
-                subprocess.run(
-                    ["git", "config", "user.email", "test@example.com"], capture_output=True
-                )
-                subprocess.run(["git", "add", "."], capture_output=True)
-                subprocess.run(["git", "commit", "-m", "initial"], capture_output=True)
-
-            return_code = run_inside_venv(command, prebuilt_env, result.project_path)
-            assert return_code == 0, f"Quality check '{command}' should pass"
-
-    def test_bake_and_build_project(self, template_path, prebuilt_env):
+    def test_bake_and_build_project(self, baked_default_project: CopierResult):
         """Test that the generated project can be built."""
-        with bake_copier_template(template_path) as result:
-            if result.exception:
-                pytest.fail(f"Template generation failed: {result.exception}")
+        return_code = run_with_uv("uv build", baked_default_project.project_path)
+        assert return_code == 0, "Project should build successfully"
 
-            return_code = run_inside_venv("uv build", prebuilt_env, result.project_path)
-            assert return_code == 0, "Project should build successfully"
+        dist_dir = baked_default_project.project_path / "dist"
+        assert dist_dir.exists(), "dist directory should be created"
+        assert len(list(dist_dir.glob("*"))) >= 1, "Should create at least one distribution file"
 
-            # Check that build artifacts were created
-            dist_dir = result.project_path / "dist"
-            assert dist_dir.exists(), "dist directory should be created"
+    def test_bake_and_run_tests(self, baked_default_project: CopierResult):
+        """Test that generated project's tests can run.
 
-            dist_files = list(dist_dir.glob("*"))
-            assert len(dist_files) >= 1, "Should create at least one distribution file"
-
-    def test_bake_and_run_tests(self, template_path, prebuilt_env):
-        """Test that generated project's tests can run."""
-        with bake_copier_template(template_path, {"use_pytest": True}) as result:
-            if result.exception:
-                pytest.fail(f"Template generation failed: {result.exception}")
-
-            # Initialize git (required by some tools)
-            with inside_dir(result.project_path):
-                subprocess.run(["git", "init"], capture_output=True)
-                subprocess.run(["git", "config", "user.name", "Test"], capture_output=True)
-                subprocess.run(
-                    ["git", "config", "user.email", "test@example.com"], capture_output=True
-                )
-                subprocess.run(["git", "add", "."], capture_output=True)
-                subprocess.run(["git", "commit", "-m", "initial"], capture_output=True, text=True)
-
-            # Run tests
-            return_code = run_inside_venv("pytest", prebuilt_env, result.project_path)
-            assert return_code == 0, "Generated project tests should pass"
+        ``uv run pytest`` (without --isolated) lets uv sync the generated project's
+        own venv so the package is importable from within its tests.
+        """
+        return_code = run_with_uv("uv run pytest", baked_default_project.project_path)
+        assert return_code == 0, "Generated project tests should pass"
 
 
 if __name__ == "__main__":
