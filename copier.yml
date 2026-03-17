@@ -145,7 +145,7 @@ formatter:
   choices:
     - Ruff-format
     - Black
-    - No
+    - "No"
   default: Ruff-format
 
 hooks_tool:
@@ -154,7 +154,7 @@ hooks_tool:
   choices:
     - prek
     - pre-commit
-    - No
+    - "No"
   default: prek
 
 use_pytest:
@@ -187,7 +187,7 @@ docs:
   choices:
     - Read the docs
     - Github Pages
-    - No
+    - "No"
   default: Read the docs
 
 with_jupyter:
@@ -232,7 +232,7 @@ has_cli:
 
 uses_docs:
   type: bool
-  default: "{{ docs != 'False' }}"
+  default: "{{ docs != 'No' }}"
   when: false
 
 uses_readthedocs:
@@ -242,7 +242,7 @@ uses_readthedocs:
 
 uses_hook_tool:
   type: bool
-  default: "{{ hooks_tool != 'False' }}"
+  default: "{{ hooks_tool != 'No' }}"
   when: false
 
 all_py_versions:
