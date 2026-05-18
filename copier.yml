@@ -27,6 +27,10 @@ _skip_if_exists:
   - CHANGELOG.md
   - HISTORY.md
 
+# Conditionally exclude files based on user answers
+_exclude:
+  - "{% if hooks_tool == 'No' %}.github/workflows/update-pre-commit.yml.jinja{% endif %}"
+
 # Project Information
 project_name:
   type: str

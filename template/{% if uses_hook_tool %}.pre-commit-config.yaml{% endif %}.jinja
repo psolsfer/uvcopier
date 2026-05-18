@@ -48,7 +48,7 @@ repos:
         types: [python]
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.12.12
+    rev: v0.15.13
     hooks:
       - id: ruff-check
         args: [--fix, --exit-non-zero-on-fix]
@@ -59,35 +59,26 @@ repos:
 {%- if formatter == 'Black' %}
 
   - repo: https://github.com/psf/black
-    rev: 24.10.0
+    rev: 25.5.1
     hooks:
       - id: black
         language_version: python3
 
 {%- endif %}
 
-  - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.17.1
+  - repo: local
     hooks:
       - id: mypy
-        additional_dependencies: [
-{%- if with_pydantic_typing %}
-          pydantic,
-{%- endif %}
-{%- if has_cli %}
-{%- if command_line_interface|lower == 'click' %}
-          click,
-{%- elif command_line_interface|lower == 'typer' %}
-          typer,
-{%- endif %}
-{%- endif %}
-        ]
-        args: [--explicit-package-bases]
+        name: mypy
+        entry: tox -e type
+        language: system
+        pass_filenames: false
+        types: [python]
 
 {%- if development_environment == "strict" %}
 
   - repo: https://github.com/pypa/pip-audit
-    rev: v2.9.0
+    rev: v2.10.0
     hooks:
       - id: pip-audit
 
