@@ -29,9 +29,9 @@ jobs:
       - name: Open pull request if hooks changed
         uses: peter-evans/create-pull-request@v8
         with:
-          commit-message: "chore: {{ hooks_tool }} autoupdate"
+          commit-message: "build: {{ hooks_tool }} autoupdate"
           branch: pre-commit-autoupdate
-          title: "chore: update pre-commit hook versions"
+          title: "build: update pre-commit hook versions"
           body: |
             Automated monthly update of pre-commit hook revisions via `{{ hooks_tool }} autoupdate`.
           labels: dependencies
