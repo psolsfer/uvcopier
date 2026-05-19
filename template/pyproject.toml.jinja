@@ -184,6 +184,7 @@ version_files = [
 ]
 
 [tool.mypy]
+python_version = "{{ python_version }}"
 {%- if with_pydantic_typing %}
 plugins = "pydantic.mypy"
 {%- endif %}
