@@ -1,3 +1,9 @@
+## v0.5.2 (2026-05-26)
+
+### Fix
+
+- wrong package folder in tox.ini.jinja template
+
 ## v0.5.1 (2026-05-19)
 
 ## v0.5.0 (2026-03-17)
