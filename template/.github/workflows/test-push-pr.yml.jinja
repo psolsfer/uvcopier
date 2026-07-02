@@ -101,14 +101,3 @@ jobs:
     - name: Run tox
       run: tox
 
-{%- if use_pytest %}
-
-    - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v5
-      with:
-        file: ./coverage.xml
-        flags: unittests
-        name: codecov-umbrella
-        fail_ci_if_error: false
-
-{%- endif %}
