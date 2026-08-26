@@ -10,5 +10,9 @@ insert_final_newline = true
 charset = utf-8
 end_of_line = lf
 
+# Windows shell scripts must use CRLF (matches .gitattributes)
+[*.{bat,cmd,ps1}]
+end_of_line = crlf
+
 [LICENSE]
 insert_final_newline = false

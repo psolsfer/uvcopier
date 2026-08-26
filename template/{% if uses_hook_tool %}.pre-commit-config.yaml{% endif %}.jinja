@@ -1,13 +1,71 @@
 # https://pre-commit.com
 default_install_hook_types: [commit-msg, pre-commit]
 default_stages: [pre-commit, manual]
-fail_fast: true
+
+# Deliberately off. Every auto-fixing hook "fails" the run when it changes a
+# file, so with fail_fast a commit needing three fixers costs three attempts.
+# Letting the whole set run means one pass fixes everything and a single
+# `git add -u` gets you committed.
+fail_fast: false
 
 repos:
   - repo: meta
     hooks:
       - id: check-useless-excludes
 
+  # ---------------------------------------------------------------------------
+  # Fixers, narrowest scope first: the Python formatter goes before the
+  # universal normalizers, so the normalizers get the last word on the bytes
+  # that land in the commit.
+  # ---------------------------------------------------------------------------
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.15.13
+    hooks:
+      - id: ruff-check
+        args: [--fix, --exit-non-zero-on-fix]
+{%- if formatter == 'Ruff-format' %}
+      - id: ruff-format
+{%- endif %}
+
+{%- if formatter == 'Black' %}
+
+  - repo: https://github.com/psf/black
+    rev: 25.5.1
+    hooks:
+      - id: black
+        language_version: python3
+
+{%- endif %}
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      # These three run on every file type, not just Python. A Python formatter
+      # already guarantees all three properties for .py, so restricting them to
+      # Python would leave YAML, TOML and Markdown unprotected -- the files that
+      # actually need them.
+      - id: end-of-file-fixer
+{%- if is_open_source %}
+        # .editorconfig deliberately keeps LICENSE without a final newline.
+        exclude: '^LICENSE$'
+{%- endif %}
+      - id: trailing-whitespace
+        args: [--markdown-linebreak-ext=md]
+{%- if is_open_source %}
+        # Never silently edit the verbatim license text.
+        exclude: '^LICENSE$'
+{%- endif %}
+      - id: mixed-line-ending
+        # --fix=lf, not the default --fix=auto: "auto" normalizes each file to
+        # its own most frequent ending, so a wholly-CRLF file is considered
+        # consistent and left alone, and nothing ever converges. Tools that
+        # write files programmatically on Windows produce exactly such files.
+        args: [--fix=lf]
+      - id: fix-byte-order-marker
+
+  # ---------------------------------------------------------------------------
+  # Checkers: run against the tree in the state it will actually be committed.
+  # ---------------------------------------------------------------------------
   - repo: https://github.com/pre-commit/pygrep-hooks
     rev: v1.10.0
     hooks:
@@ -35,42 +93,30 @@ repos:
       - id: debug-statements
       - id: destroyed-symlinks
       - id: detect-private-key
-      - id: end-of-file-fixer
-        types: [python]
-      - id: fix-byte-order-marker
-      - id: mixed-line-ending
       - id: name-tests-test
         args: [--pytest-test-first]
 {%- if development_environment == "strict" %}
       - id: no-commit-to-branch
 {%- endif %}
-      - id: trailing-whitespace
-        types: [python]
 
-  - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.15.13
-    hooks:
-      - id: ruff-check
-        args: [--fix, --exit-non-zero-on-fix]
-{%- if formatter == 'Ruff-format' %}
-      - id: ruff-format
-{%- endif %}
-
-{%- if formatter == 'Black' %}
-
-  - repo: https://github.com/psf/black
-    rev: 25.5.1
-    hooks:
-      - id: black
-        language_version: python3
-
-{%- endif %}
-
+  # ---------------------------------------------------------------------------
+  # Expensive validation last.
+  # ---------------------------------------------------------------------------
   - repo: local
     hooks:
       - id: mypy
         name: mypy
-        entry: tox -e type
+        # Runs the project's own mypy out of the project's own environment, so
+        # the answer here matches what the editor shows and what `tox -e type`
+        # reports. A hook that pins its own mypy (mirrors-mypy) is a second
+        # version and a second, hand-maintained dependency list, and the two
+        # drift apart silently.
+        #
+        # `uv run` uses uv.lock where one is committed and resolves where it is
+        # not, so this works both locally and on a fresh CI checkout.
+        # pass_filenames is false because mypy analyses the whole program:
+        # handing it only the staged files changes the result.
+        entry: uv run mypy src/{{ package_import_name }}
         language: system
         pass_filenames: false
         types: [python]

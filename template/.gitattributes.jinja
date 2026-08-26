@@ -1,9 +1,17 @@
 # Always use LF line endings in the repository
 * text=auto eol=lf
 
-# Keep Windows batch files using CRLF
+# Keep Windows shell scripts using CRLF
 *.bat text eol=crlf
 *.cmd text eol=crlf
+*.ps1 text eol=crlf
+
+# Key material and signed artifacts: byte-exact, never normalized. Rewriting a
+# line ending inside a signed or encoded file changes its bytes, which can
+# invalidate a signature or a checksum in ways that are very hard to diagnose.
+*.pem -text
+*.key -text
+*.pub -text
 
 # Binary files (no EOL normalization)
 *.png binary

@@ -1,0 +1,15 @@
+# Keep this repository on LF everywhere.
+#
+# This matters more here than in an ordinary project: Copier renders these
+# source files verbatim, so a .jinja file that drifts to CRLF renders CRLF
+# content into every project generated from this template. The generated
+# project's own .gitattributes would eventually normalize it, but the files
+# arrive wrong and any tooling run before the first commit sees them that way.
+* text=auto eol=lf
+
+# Binary files (no EOL normalization)
+*.png binary
+*.jpg binary
+*.ico binary
+*.pdf binary
+*.zip binary
