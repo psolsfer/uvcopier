@@ -1,4 +1,4 @@
-# Page configuration for 'mkdocs-awesome-pages-plugin'
+# Page configuration for 'mkdocs-awesome-nav'
 nav:
     - Home:
           - About: index.md

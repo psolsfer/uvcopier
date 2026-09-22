@@ -109,7 +109,7 @@ coverage.xml
 # Django stuff:
 *.log
 
-# MkDocs documentation
+# Zensical documentation
 site/
 
 # IntelliJ Idea family of suites

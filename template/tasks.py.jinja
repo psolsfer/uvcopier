@@ -10,6 +10,7 @@ import os
 import platform
 import shutil
 import webbrowser
+from collections.abc import Mapping
 from pathlib import Path
 
 from invoke.context import Context
@@ -39,10 +40,12 @@ def _delete_file(file: Path) -> None:
     file.unlink(missing_ok=True)
 
 
-def _run(c: Context, command: str, ignore_failure: bool = False) -> Result | None:
+def _run(
+    c: Context, command: str, ignore_failure: bool = False, env: Mapping[str, str] | None = None
+) -> Result | None:
     """Run a command with uv."""
     try:
-        return c.run(f"uv run {command}", pty=platform.system() != "Windows")
+        return c.run(f"uv run {command}", env=env, pty=platform.system() != "Windows")
     except Failure:
         if ignore_failure:
             return None
@@ -170,10 +173,8 @@ def lab(c: Context) -> None:
 @task(help={"launch": "Launch documentation in the web browser"})
 def docs(c: Context, launch: bool = True) -> None:
     """Generate documentation."""
-    # Remove old documentation files
     clean_docs(c)
-    # Generate documentation
-    _run(c, "mkdocs build")
+    _run(c, "zensical build", env={"OFFLINE": "true"})
     if launch:
         webbrowser.open(DOCS_INDEX.as_uri())
 
@@ -182,7 +183,9 @@ def docs(c: Context, launch: bool = True) -> None:
 def deploy_docs(c: Context) -> None:
     """Deploy documentation."""
 {%- if docs == 'Github Pages' %}
-    _run(c, "mkdocs gh-deploy")
+    # TODO There isn't a direct Zensical equivalent to mkdocs gh-deploy for deploying to Github Pages
+    # TODO See https://zensical.org/docs/publish-your-site/#with-github-actions
+    # _run(c, "mkdocs gh-deploy")
 {%- else %}
     print("Documentation deployment not configured for this platform."){% if development_environment == 'strict' %}  # noqa: T201{% endif %}
 {%- endif %}
@@ -191,7 +194,7 @@ def deploy_docs(c: Context) -> None:
 @task
 def servedocs(c: Context) -> None:
     """Serve the docs with live reloading."""
-    _run(c, "mkdocs serve")
+    _run(c, "zensical serve")
 
 
 {%- endif %}

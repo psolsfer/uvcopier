@@ -1,3 +1,4 @@
+# TODO Move to zensical.toml
 site_name: {{ project_name }}
 {%- if is_open_source %}
 repo_url: https://{{ repository_provider }}/{{ repository_namespace }}/{{ repository_name }}
@@ -6,10 +7,13 @@ repo_name: {{ project_name }}
 
 site_dir: site
 
+use_directory_urls: true
+
 theme:
-  name: material
+  variant: modern
+  # logo: assets/app_icon.svg # TODO
+  # favicon: assets/app_icon.svg # TODO
   language: en
-  #logo: assets/logo.png
   palette:
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
@@ -54,13 +58,15 @@ markdown_extensions:
       emoji_generator: !!python/name:material.extensions.emoji.to_svg
   - pymdownx.highlight:
       linenums: true
+  - pymdownx.snippets
   - pymdownx.superfences:
       preserve_tabs: true
   - pymdownx.tabbed:
       alternate_style: true
 
 plugins:
-  - include-markdown
+  - awesome-nav # https://lukasgeiter.github.io/mkdocs-awesome-nav/
+  #- include-markdown # NOTE: Plugin not yet working with zensical: https://github.com/zensical/backlog/issues/127; Can use https://zensical.org/docs/studio/workflows/reusable-content/ with pymdownx.snippets
   - mkdocstrings:
       default_handler: python
       handlers:
@@ -81,7 +87,8 @@ plugins:
             show_root_toc_entry: true
             show_category_heading: true
             show_submodules: false
-  - awesome-pages
+  - offline:
+        enabled: !ENV [OFFLINE, false]
   - search:
       lang: en
 

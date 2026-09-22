@@ -26,4 +26,4 @@ Here’s a brief overview of some of the tasks included in this project:
 
 `pre_release_check`: This task agrupates the `lint` and `test-all` tasks.
 
-`docs`: This task generates the project documentation with `mkdocs`.
+`docs`: This task generates the project documentation with `zensical`.

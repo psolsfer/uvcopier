@@ -3,7 +3,9 @@
 {%- if command_line_interface|lower == 'argparse' %}
 import argparse
 {%- endif %}
+{%- if not command_line_interface|lower in ['typer', 'cyclopts'] %}
 import sys
+{%- endif %}
 
 {%- if command_line_interface|lower == 'click' %}
 import click

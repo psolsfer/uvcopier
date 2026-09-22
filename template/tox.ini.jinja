@@ -87,10 +87,11 @@ commands =
 
 [testenv:docs]
 description = Build documentation
+setenv = OFFLINE = true
 commands_pre =
     uv pip install -e . --group docs -r ./pyproject.toml -q
 commands =
-    mkdocs build
+    zensical build
 
 {%- endif %}
 {%- if use_pytest %}

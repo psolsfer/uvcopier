@@ -6,13 +6,15 @@ Execute 'invoke --list' for guidance on using Invoke
 import platform
 import shutil
 import webbrowser
+from collections.abc import Mapping
 from pathlib import Path
 
 from invoke.context import Context
+from invoke.exceptions import Failure
 from invoke.runners import Result
 from invoke.tasks import task
 
-BAKE_OPTIONS = "--no-input"
+# BAKE_OPTIONS = "--no-input"
 
 ROOT_DIR = Path(__file__).parent
 COVERAGE_DIR = ROOT_DIR.joinpath("htmlcov")
@@ -25,17 +27,21 @@ TEST_DIR = ROOT_DIR.joinpath("tests")
 PYTHON_DIRS = [str(d) for d in [HOOKS_DIR, TEST_DIR]]
 
 
-def _run(c: Context, command: str) -> Result | None:
-    return c.run(f"uv run {command}", pty=platform.system() != "Windows")
+def _run(
+    c: Context, command: str, ignore_failure: bool = False, env: Mapping[str, str] | None = None
+) -> Result | None:
+    try:
+        return c.run(f"uv run {command}", env=env, pty=platform.system() != "Windows")
+    except Failure:
+        if ignore_failure:
+            return None
 
 
 @task
 def docs(c: Context) -> None:
     """Generate documentation."""
-    # Remove old documentation files
     clean_docs(c)
-    # Generate docs
-    _run(c, "mkdocs build")
+    _run(c, "zensical build")
     webbrowser.open(DOCS_INDEX.absolute().as_uri())
 
 

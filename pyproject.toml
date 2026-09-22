@@ -51,12 +51,10 @@ packages = []
 [dependency-groups]
 dev = [
     "click>=8.2.1",
-    "mkdocs>=1.5.3",
-    "mkdocs-awesome-pages-plugin>=2.9.2",
-    "mkdocs-include-markdown-plugin>=6.0",
-    "mkdocs-material>=9.4.2",
-    "mkdocs-material-extensions>=1.2",
+    "mkdocs-awesome-nav>=3.3.0",
+    # "mkdocs-include-markdown-plugin>=6.0", # NOTE: Plugin not yet working with zensical: https://github.com/zensical/backlog/issues/127; Can use https://zensical.org/docs/studio/workflows/reusable-content/ with pymdownx.snippets
     "mkdocstrings[python]>=0.23.0",
+    "zensical>=0.0.62",
     "pytest>=8.4.1",
     "typer>=0.16.0",
     "tox",
@@ -64,12 +62,10 @@ dev = [
     "commitizen>=4.9.1",
 ]
 docs = [
-    "mkdocs>=1.5.3",
-    "mkdocs-awesome-pages-plugin>=2.9.2",
-    "mkdocs-include-markdown-plugin>=6.0",
-    "mkdocs-material>=9.4.2",
-    "mkdocs-material-extensions>=1.2",
+    "mkdocs-awesome-nav>=3.3.0",
+    # "mkdocs-include-markdown-plugin>=6.0", # NOTE: Plugin not yet working with zensical: https://github.com/zensical/backlog/issues/127; Can use https://zensical.org/docs/studio/workflows/reusable-content/ with pymdownx.snippets
     "mkdocstrings[python]>=0.23.0",
+    "zensical>=0.0.62",
 ]
 
 [tool.commitizen]

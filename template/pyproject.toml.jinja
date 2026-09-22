@@ -87,12 +87,10 @@ dev = [
     "tox-gh-actions<4,>=3",
     "tox-uv>1.20",
 {%- if uses_docs %}
-    "mkdocs>=1.5.3",
-    "mkdocs-awesome-pages-plugin>=2.9.2",
-    "mkdocs-include-markdown-plugin>=6.0",
-    "mkdocs-material>=9.4.2",
-    "mkdocs-material-extensions>=1.2",
+    "mkdocs-awesome-nav>=3.3.0",
+    # "mkdocs-include-markdown-plugin>=6.0", # NOTE: Plugin not yet working with zensical: https://github.com/zensical/backlog/issues/127; Can use https://zensical.org/docs/studio/workflows/reusable-content/ with pymdownx.snippets
     "mkdocstrings[python]>=0.23.0",
+    "zensical>=0.0.62",
 {%- endif %}
     "mypy>=1.6.0",
 {%- if use_pytest %}
@@ -149,12 +147,10 @@ test = [
 ]
 {%- if uses_docs %}
 docs = [
-    "mkdocs>=1.5.3",
-    "mkdocs-awesome-pages-plugin>=2.9.2",
-    "mkdocs-include-markdown-plugin>=6.0",
-    "mkdocs-material>=9.4.2",
-    "mkdocs-material-extensions>=1.2",
+    "mkdocs-awesome-nav>=3.3.0",
+    # "mkdocs-include-markdown-plugin>=6.0", # NOTE: Plugin not yet working with zensical: https://github.com/zensical/backlog/issues/127; Can use https://zensical.org/docs/studio/workflows/reusable-content/ with pymdownx.snippets
     "mkdocstrings[python]>=0.23.0",
+    "zensical>=0.0.62",
 ]
 {%- endif %}
 {%- if has_cli %}

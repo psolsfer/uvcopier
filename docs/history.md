@@ -1,1 +1,1 @@
-{% include-markdown "../HISTORY.md" %}
+--8<-- "HISTORY.md:history"

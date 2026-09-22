@@ -23,16 +23,7 @@ build:
         install:
          # Install dependencies with docs using uv
             - uv install --group docs
-        # build: # ??? Needed? Later there is the 'mkdocs' section
-        #     # Build documentation with MkDocs
-        #     html:
-        #         - NO_COLOR=1 uv run mkdocs build --strict --site-dir $READTHEDOCS_OUTPUT/html
 
-
-# Build documentation in the docs/ directory with MkDocs
-mkdocs:
+# Build documentation in the docs/ directory with Zensical
+zensical:
     configuration: mkdocs.yml
-# Optionally declare the Python requirements required to build your docs
-# python:
-#   install:
-#   - requirements: docs/requirements.txt

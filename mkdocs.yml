@@ -4,8 +4,10 @@ repo_name: uvcopier
 
 site_dir: site
 
+use_directory_urls: true
+
 theme:
-    name: material
+    variant: modern
     language: en
     #logo: assets/logo.png
     palette:
@@ -60,13 +62,15 @@ markdown_extensions:
           emoji_generator: !!python/name:material.extensions.emoji.to_svg
     - pymdownx.highlight:
           linenums: true
+    - pymdownx.snippets
     - pymdownx.superfences:
           preserve_tabs: true
     - pymdownx.tabbed:
           alternate_style: true
 
 plugins:
-    - include-markdown
+    - awesome-nav # https://lukasgeiter.github.io/mkdocs-awesome-nav/
+    - include-markdown # NOTE: Plugin not yet working with zensical: https://github.com/zensical/backlog/issues/127; Can use https://zensical.org/docs/studio/workflows/reusable-content/ with pymdownx.snippets
     - mkdocstrings:
           default_handler: python
           handlers:
@@ -83,7 +87,8 @@ plugins:
                       show_signature_annotations: true
                       # Other
                       show_bases: false
-    - awesome-pages
+    - offline:
+          enabled: !ENV [OFFLINE, false]
     - search:
           lang: en
 extra:

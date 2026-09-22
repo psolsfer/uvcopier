@@ -1,3 +1,4 @@
+--8<-- [start:readme]
 <h1 align="center">uvcopier</h1>
 
 <br/>
@@ -54,7 +55,7 @@ A batteries-included template for Python projects using uv for dependency manage
 
 ### Documentation
 
-- Documentation generation with [MkDocs] and the [Material for MkDocs] theme with [PyMdown Extensions].
+- Documentation generation with [Zensical] and [PyMdown Extensions].
 - Code documentation extraction with [mkdocstrings]
 - Support for multiple docstring styles (Google, NumPy)
 - Hosting options for [Read the Docs] or [GitHub Pages]
@@ -131,8 +132,7 @@ The following templates were used as basis and inspiration for the creation of s
 [Dependabot]: https://github.com/marketplace/actions/release-drafter
 [Invoke]: https://www.pyinvoke.org/
 [JupyterLab]: https://jupyter.org/
-[Material for MkDocs]: https://squidfunk.github.io/mkdocs-material/
-[MkDocs]: https://www.mkdocs.org/
+[mkdocstrings]: https://mkdocstrings.github.io/
 [Mypy]: https://mypy.readthedocs.io/en/stable/
 [Pydantic]: https://docs.pydantic.dev
 [Pre-commit]: https://pre-commit.com/
@@ -145,7 +145,9 @@ The following templates were used as basis and inspiration for the creation of s
 [tox]: https://tox.wiki/
 [Typer]: https://typer.tiangolo.com/
 [uv]: https://docs.astral.sh/uv/
+[Zensical]: https://zensical.org/
 
 [audreyfeldroy/cookiecutter-pypackage]: https://github.com/audreyfeldroy/cookiecutter-pypackage
 [briggySmalls/cookiecutter-pypackage]: https://briggysmalls.github.io/cookiecutter-pypackage
 [TezRomacH/python-package-template]: https://github.com/TezRomacH/python-package-template
+--8<-- [end:readme]
