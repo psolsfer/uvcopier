@@ -1,4 +1,4 @@
---8<-- [start:readme]
+<!-- --8<-- [start:readme] -->
 <h1 align="center">uvcopier</h1>
 
 <br/>
@@ -150,4 +150,4 @@ The following templates were used as basis and inspiration for the creation of s
 [audreyfeldroy/cookiecutter-pypackage]: https://github.com/audreyfeldroy/cookiecutter-pypackage
 [briggySmalls/cookiecutter-pypackage]: https://briggysmalls.github.io/cookiecutter-pypackage
 [TezRomacH/python-package-template]: https://github.com/TezRomacH/python-package-template
---8<-- [end:readme]
+<!-- --8<-- [end:readme] -->

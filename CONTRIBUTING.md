@@ -1,4 +1,4 @@
---8<-- [start:contributing]
+<!-- --8<-- [start:contributing] -->
 # Contributing
 
 Contributions are welcome, and they are greatly appreciated! Every little bit
@@ -164,4 +164,4 @@ To write and run your new test, follow these steps:
    congratulations!
 
 [Issues]: <https://github.com/psolsfer/uvcopier/issues>
---8<-- [end:contributing]
+<!-- --8<-- [end:contributing] -->
