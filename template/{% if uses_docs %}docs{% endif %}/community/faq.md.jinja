@@ -6,7 +6,7 @@
 
 A: Make sure you have Python {{ python_version }}+ installed and try upgrading pip:
 
-```bash
+``` bash
 pip install --upgrade pip
 pip install {{ package_distribution_name }}
 ```
@@ -39,7 +39,7 @@ A: Make sure you've installed the package and that your Python scripts directory
 
 A: Make sure you've installed all development dependencies:
 
-```bash
+``` bash
 uv sync
 ```
 
@@ -47,7 +47,7 @@ uv sync
 
 A: Run the formatters and linters:
 
-```bash
+``` bash
 {%- if formatter == 'Ruff-format' %}
 uv run ruff format .
 {%- elif formatter == 'Black' %}

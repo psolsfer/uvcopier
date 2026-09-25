@@ -65,33 +65,33 @@ TODO
 
 ### From PyPI
 
-```bash
+``` bash
 pip install {{ package_distribution_name }}
 ```
 
 or
 
-```bash
+``` bash
 uv add {{ package_distribution_name }}
 ```
 {%- else %}
 
 ### From Private Repository
 
-```bash
+``` bash
 pip install {{ package_distribution_name }} --index-url {{ private_package_repository_url }}
 ```
 
 or
 
-```bash
+``` bash
 uv add {{ package_distribution_name }} --index {{ private_package_repository_name }}
 ```
 {%- endif %}
 
 ### From Source
 
-```bash
+``` bash
 git clone https://{{ repository_provider }}/{{ repository_namespace }}/{{ repository_name }}.git
 cd {{ repository_name }}
 uv sync
@@ -103,14 +103,14 @@ uv sync
 
 ### Command Line Interface
 
-```bash
+``` bash
 {{ package_command_line_name }} --help
 ```
 {%- endif %}
 
 ### Python API
 
-```python
+``` python
 import {{ package_import_name }}
 
 # TODO: Add usage examples
@@ -120,7 +120,7 @@ import {{ package_import_name }}
 
 ### Setup
 
-```bash
+``` bash
 git clone https://{{ repository_provider }}/{{ repository_namespace }}/{{ repository_name }}.git
 cd {{ repository_name }}
 uv sync
@@ -129,13 +129,13 @@ uv sync
 {% if hooks_tool == 'pre-commit' -%}
 Install the pre-commit script
 
-```bash
+``` bash
 uv run pre-commit install
 ```
 {% elif hooks_tool == 'prek' -%}
 Install the prek git hook
 
-```bash
+``` bash
 uv run prek install
 ```
 {%- endif %}
@@ -143,18 +143,18 @@ uv run prek install
 ### Running Tests
 
 {%- if use_pytest %}
-```bash
+``` bash
 uv run pytest
 ```
 {%- else %}
-```bash
+``` bash
 uv run python -m unittest discover
 ```
 {%- endif %}
 
 ### Code Quality
 
-```bash
+``` bash
 uv run ruff check .
 {%- if formatter == 'Ruff-format' %}
 uv run ruff format .

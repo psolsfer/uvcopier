@@ -47,7 +47,7 @@ Ready to contribute? Here's how to set up `uvcopier` for local development.
 1. Fork the `uvcopier` repo on GitHub.
 2. Clone your fork locally:
 
-    ```bash linenums="0"
+    ``` bash linenums="0"
     git clone git@github.com:YOUR_NAME/uvcopier.git
     ```
 
@@ -55,13 +55,13 @@ Ready to contribute? Here's how to set up `uvcopier` for local development.
 
     First, navigate to your project directory:
 
-    ```bash linenums="0"
+    ``` bash linenums="0"
     cd uvcopier/
     ```
 
     Then, create a new virtual environment and install the dependencies:
 
-    ```bash linenums="0"
+    ``` bash linenums="0"
     uv sync
     ```
 
@@ -69,7 +69,7 @@ Ready to contribute? Here's how to set up `uvcopier` for local development.
 
 4. Create a branch for local development:
 
-    ```bash linenums="0"
+    ``` bash linenums="0"
     git checkout -b name-of-your-bugfix-or-feature
     ```
 
@@ -79,21 +79,21 @@ Ready to contribute? Here's how to set up `uvcopier` for local development.
 
 6. When you're done making changes, check that your changes pass the tests, including testing other Python versions with tox:
 
-    ```bash linenums="0"
+    ``` bash linenums="0"
     invoke test-all
     ```
 
 7. Commit your changes and push your branch to GitHub:
 
 === "using commitizen"
-    ```bash
+    ``` bash
     git add .
     uv run cz commit
     git push origin name-of-your-bugfix-or-feature
     ```
 
 === "manual commits"
-    ```bash linenums="0"
+    ``` bash linenums="0"
     git add .
     git commit -m "Your detailed description of your changes."
     git push origin name-of-your-bugfix-or-feature
@@ -102,7 +102,7 @@ Ready to contribute? Here's how to set up `uvcopier` for local development.
 8. Submit a pull request through the GitHub website.
 
 9. After your PR is merged, you can safely delete your branch:
-   ```bash
+   ``` bash
    git checkout main
    git pull  # Get the latest changes including your merge
    git branch -d name-of-your-bugfix-or-feature
@@ -134,7 +134,7 @@ To write and run your new test, follow these steps:
 2. If you have already made changes to the code, stash your changes and confirm
    all your changes were stashed:
 
-   ```bash linenums="0"
+   ``` bash linenums="0"
     git stash
     git stash list
     ```
@@ -142,20 +142,20 @@ To write and run your new test, follow these steps:
 3. Run your test and confirm that your test fails. If your test does not fail,
    rewrite the test until it fails on the original code:
 
-    ```bash linenums="0"
+    ``` bash linenums="0"
     uv run pytest ./tests
     ```
 
 4. (Optional) Run the tests with tox to ensure that the code changes work with different Python versions:
 
-    ```bash linenums="0"
+    ``` bash linenums="0"
     uv run tox
     ```
 
 5. Proceed work on your bug fix or new feature or restore your changes. To
    restore your stashed changes and confirm their restoration:
 
-    ```bash linenums="0"
+    ``` bash linenums="0"
     git stash pop
     git stash list
     ```

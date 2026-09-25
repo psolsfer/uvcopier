@@ -1,6 +1,6 @@
 # Tutorial
 
-----
+---
 
 !!! note
 
@@ -12,7 +12,7 @@ To start with, you will need a [GitHub] account and an account on [PyPI]. Create
 
 First, install [copier]. [uv] will handle this for you:
 
-```bash linenums="0"
+``` bash linenums="0"
 uv tool install copier
 ```
 
@@ -20,7 +20,7 @@ uv tool install copier
 
 Now it's time to generate your Python package using [copier], pointing it at the [uvcopier] repo:
 
-```bash linenums="0"
+``` bash linenums="0"
 copier copy https://github.com/psolsfer/uvcopier mypackage
 ```
 
@@ -33,24 +33,25 @@ If unsure, stick with the defaults.
 
 A project folder named ``mypackage`` was created. Move into this folder:
 
-```bash linenums="0"
+``` bash linenums="0"
 cd mypackage
 ```
 
 Initialize your environment and dependencies with [uv]:
 
-```bash linenums="0"
+``` bash linenums="0"
 uv sync
 ```
 
 Now you can initialize [uv], which sets up a new Python environment for your project and creates a `pyproject.toml` file to manage dependencies. You can also install pre-commit hooks, which are scripts that automatically check your code for errors before each commit:
 
-```bash linenums="0"
+``` bash linenums="0"
 uv run prek install
 ```
+
 or
 
-```bash linenums="0"
+``` bash linenums="0"
 uv run pre-commit install
 ```
 
@@ -58,7 +59,7 @@ Using Invoke (Optional):
 
 The template includes [Invoke] tasks to automate common actions. If you want to use them:
 
-```bash linenums="0"
+``` bash linenums="0"
 uv run invoke install
 ```
 
@@ -72,10 +73,9 @@ The easiest way to achieve this is using the included [Invoke]'s automations:
 
 If you don't have [Invoke] installed, it can be easily installed with [uv]:
 
-```bash linenums="0"
+``` bash linenums="0"
 uv tool install invoke
 ```
-
 ///
 
 The Invoke automations are designed to streamline the installation process by running multiple commands at once. However, if you prefer to have more control over the installation process or if you’re not planning to use Invoke for other tasks, you might find it simpler to use uv directly. Refer to the [Automated tasks](automated_tasks.md) section for more information about the usage of Invoke.
@@ -86,7 +86,7 @@ Create a new repo named `mypackage` on GitHub, where `mypackage` matches the `[p
 
 Within the project folder, setup git to use your GitHub repo and upload the code:
 
-```bash linenums="0"
+``` bash linenums="0"
 git init .
 git add .
 git commit -m "Initial skeleton."
@@ -98,12 +98,9 @@ Where `myusername` and `mypackage` are adjusted for your username and package na
 
 !!! note
 
-       GitHub has changed the default branch name from 'master' to 'main'. If you are using another Git repository hosting service that uses the Git branch naming defaults, you might need to use 'master' instead of 'main'.
+    GitHub has changed the default branch name from 'master' to 'main'. If you are using another Git repository hosting service that uses the Git branch naming defaults, you might need to use 'master' instead of 'main'.
 
 You'll need a ssh key to push the repo. You can [generate] a key or [add] an existing one.
-
-[generate]: https://help.github.com/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent/
-[add]: https://help.github.com/articles/adding-a-new-ssh-key-to-your-github-account/
 
 ## Step 5: Set Up Read the Docs (Optional)
 
@@ -123,7 +120,7 @@ When you are ready, release your package the standard Python way. Here's a more 
 
 You can use the Invoke task to publish your package to PyPI:
 
-```bash linenums="0"
+``` bash linenums="0"
 invoke release
 ```
 
@@ -137,14 +134,16 @@ See [PyPI Help] for more information about submitting a package.
 
 Visit our [troubleshooting](troubleshooting.md) page for help. If that doesn't help, go to our [Issues] page and create a new Issue. Be sure to give as much information as possible.
 
+[add]: https://help.github.com/articles/adding-a-new-ssh-key-to-your-github-account/
 [copier]: <https://copier.readthedocs.io/>
+[generate]: https://help.github.com/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent/
 [GitHub]: https://github.com/
 [GitHub Help]: https://help.github.com/
 [Invoke]: https://www.pyinvoke.org/
 [Issues]: <https://github.com/psolsfer/uvcopier/issues>
-[uv]: <https://docs.astral.sh/uv/>
 [PyPI]: https://pypi.python.org/pypi
 [PyPI Help]: https://pypi.org/help/#publishing
 [PyPI release checklist]: pypi_release_checklist.md
 [Read the Docs]: <https://readthedocs.org/>
+[uv]: <https://docs.astral.sh/uv/>
 [uvcopier]: https://github.com/psolsfer/uvcopier

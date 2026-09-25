@@ -87,7 +87,7 @@ The prompts that need to be filled during the creation of the package are descri
 
 An existing project can be updated to the latest template using:
 
-```bash linenums="0"
+``` bash linenums="0"
 copier update
 ```
 

@@ -1,6 +1,6 @@
 # PyPI Release Checklist
 
-----
+---
 
 ## Before Your First Release
 
@@ -13,13 +13,13 @@
 
     === ":simple-uv: uv"
 
-        ```bash linenums="0"
+        ``` bash linenums="0"
         uv build
         ```
 
     === ":octicons-zap-24: Invoke"
 
-        ```bash linenums="0"
+        ``` bash linenums="0"
         invoke build
         ```
 
@@ -47,19 +47,19 @@
 
     === ":octicons-zap-24: Invoke"
 
-        ```bash linenums="0"
+        ``` bash linenums="0"
         invoke release
         ```
 
     === ":simple-uv: u"
 
-        ```bash linenums="0"
+        ``` bash linenums="0"
         uv publish
         ```
 
     This will build and publish your package to PyPI. If you're publishing to a private repository, you can specify the repository with the `--publish-url` option, including the name of the private repository provided in the `pyproject.toml` file.
 
-    ```bash linenums="0"
+    ``` bash linenums="0"
     uv publish --publish-url <name_of_private_repo>
     ```
 
@@ -78,7 +78,7 @@ Note that the
 
     The recommended option is to use [Commitizen]:
 
-    ```bash linenums="0"
+    ``` bash linenums="0"
     git add .
     uv run cz commit
     ```
@@ -87,7 +87,7 @@ Note that the
 
     If you’re not using Commitizen, you can manually add and commit your changes with Git:
 
-    ```bash linenums="0"
+    ``` bash linenums="0"
     git add .
     git commit -m "Changelog for upcoming release x.y.z"
     ```
@@ -100,7 +100,7 @@ Note that the
 
     The recommended method for updating the version number is to use [Commitizen]:
 
-    ```bash linenums="0"
+    ``` bash linenums="0"
     uv run cz bump
     ```
 
@@ -108,7 +108,7 @@ Note that the
 
     The version can also be provided:
 
-    ```bash linenums="0"
+    ``` bash linenums="0"
     uv run cz bump 0.1.0
     ```
 
@@ -116,7 +116,7 @@ Note that the
 
     If you are not using Commitizen, you can manually update the version number using [uv] (the new version can be 'major', 'minor', or 'patch'): # NOTE: uv is not yet configured to update the version across other project files.
 
-    ```bash linenums="0"
+    ``` bash linenums="0"
     uv version --bump minor
     ```
 
@@ -130,7 +130,7 @@ Note that the
 
     Here’s how you can install the package for local development with uv:
 
-    ```bash linenums="0"
+    ``` bash linenums="0"
     uv sync
     ```
 
@@ -142,25 +142,25 @@ Note that the
 
     === ":octicons-zap-24: Invoke"
 
-        ```bash linenums="0"
+        ``` bash linenums="0"
         invoke test-all
         ```
 
     === ":simple-uv: uv"
 
-        ```bash linenums="0"
+        ``` bash linenums="0"
         uv run tox
         ```
 
         or
 
-        ```bash linenums="0"
+        ``` bash linenums="0"
         uv run pytest
         ```
 
     Alternatively, it is possible to run the pre-release check can be run, which will execute all the lint/formatting tools along with the tests in `test-all`:
 
-    ```bash linenums="0"
+    ``` bash linenums="0"
         invoke pre-release-check
     ```
 
@@ -168,7 +168,7 @@ Note that the
 
     After confirming that everything is working, push your commit to the remote repository:
 
-    ```bash linenums="0"
+    ``` bash linenums="0"
     git push
     ```
 
@@ -176,7 +176,7 @@ Note that the
 
     Pushing tags is crucial for creating a new release on both GitHub and PyPI. This step assumes that you’ve already created a tag for the new release (**see step 3** above):
 
-    ```bash linenums="0"
+    ``` bash linenums="0"
     git push --tags
     ```
 

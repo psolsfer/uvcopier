@@ -6,7 +6,7 @@ To install {{ project_name }} in your project, choose your preferred package man
 
 === "pip (simple install)"
 
-    ```bash linenums="0"
+    ``` bash linenums="0"
     pip install {{ package_distribution_name }}
     ```
 
@@ -16,7 +16,7 @@ To install {{ project_name }} in your project, choose your preferred package man
 
     First, install [uv] if you haven't already (for more detailed instructions refer to [uv installation] in the official documentation):
 
-    ```bash linenums="0"
+    ``` bash linenums="0"
     # Windows (PowerShell)
     powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
 
@@ -26,7 +26,7 @@ To install {{ project_name }} in your project, choose your preferred package man
 
     Then create and initialize a new project:
 
-    ```bash linenums="0"
+    ``` bash linenums="0"
     # Create project directory
     mkdir myproject && cd myproject
 
@@ -43,7 +43,7 @@ To install {{ project_name }} in your project, choose your preferred package man
 
     Then create and initialize a new project:
 
-    ```bash linenums="0"
+    ``` bash linenums="0"
     # Create a new project
     poetry new myproject
     cd myproject
@@ -61,7 +61,7 @@ To install {{ project_name }} in your project, choose your preferred package man
 
 This package is hosted on a private repository. To install:
 
-```bash linenums="0"
+``` bash linenums="0"
 # With pip
 pip install {{ package_distribution_name }} --index-url {{ private_package_repository_url }}
 
@@ -77,7 +77,7 @@ To install {{ project_name }} for development:
 
 {%- if is_open_source %}
 
-```bash linenums="0"
+``` bash linenums="0"
 git clone https://{{ repository_provider }}/{{ repository_namespace }}/{{ repository_name }}.git
 cd {{ repository_name }}
 uv sync
@@ -85,7 +85,7 @@ uv sync
 
 {%- else %}
 
-```bash linenums="0"
+``` bash linenums="0"
 # Clone from your internal repository
 git clone <your-internal-repo-url>
 cd {{ repository_name }}

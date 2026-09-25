@@ -1,6 +1,6 @@
 # Console Script Setup
 
-----
+---
 
 Optionally, your package can include a console script using Click, Typer or argparse.
 
@@ -12,7 +12,7 @@ If the 'command_line_interface' option is set to ['click'], ['typer'] or ['argpa
 
 To use the console script in development:
 
-```bash linenums="0"
+``` bash linenums="0"
 uv sync
 ```
 
@@ -20,7 +20,7 @@ The script will be generated with output for no arguments and --help.
 
 Executing:
 
-```bash linenums="0"
+``` bash linenums="0"
 project_slug --help
 ```
 

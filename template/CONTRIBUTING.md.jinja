@@ -80,7 +80,7 @@ Ready to contribute? Here's how to set up `{{ repository_name }}` for local deve
 1. Fork the `{{ repository_name }}` repo on GitHub.
 2. Clone your fork locally:
 
-   ```bash
+   ``` bash
    git clone git@github.com:your_name_here/{{ repository_name }}.git
    ```
 
@@ -88,7 +88,7 @@ Ready to contribute? Here's how to set up `{{ repository_name }}` for local deve
 
 1. Clone the repository locally:
 
-   ```bash
+   ``` bash
    git clone <repository-url>
    ```
 
@@ -96,13 +96,13 @@ Ready to contribute? Here's how to set up `{{ repository_name }}` for local deve
 
 3. Install your local copy into a development environment:
 
-   ```bash
+   ``` bash
    cd {{ repository_name }}
    uv sync
    ```
    install pre-commits:
 
-   ```bash
+   ``` bash
    {%- if hooks_tool == 'pre-commit' %}
    uv run pre-commit install
    {%- elif hooks_tool == 'prek' %}
@@ -112,7 +112,7 @@ Ready to contribute? Here's how to set up `{{ repository_name }}` for local deve
 
 4. Create a branch for local development:
 
-   ```bash
+   ``` bash
    git checkout -b name-of-your-bugfix-or-feature
    ```
 
@@ -120,7 +120,7 @@ Ready to contribute? Here's how to set up `{{ repository_name }}` for local deve
 
 5. When you're done making changes, check that your changes pass flake8 and the tests:
 
-   ```bash
+   ``` bash
    uv run ruff check .
 {%- if formatter == 'Ruff-format' %}
    uv run ruff format .
@@ -137,7 +137,7 @@ Ready to contribute? Here's how to set up `{{ repository_name }}` for local deve
 
 6. Commit your changes and push your branch to GitHub:
 
-   ```bash
+   ``` bash
    git add .
    git commit -m "Your detailed description of your changes."
    git push origin name-of-your-bugfix-or-feature
@@ -159,7 +159,7 @@ Before you submit a pull request, check that it meets these guidelines:
 
 To run a subset of tests:
 
-```bash
+``` bash
 uv run pytest tests.test_{{ package_import_name }}
 ```
 
@@ -173,7 +173,7 @@ Make sure all your changes are committed (including an entry in HISTORY.md).
 
 Then run:
 
-```bash
+``` bash
 uv run invoke release
 ```
 

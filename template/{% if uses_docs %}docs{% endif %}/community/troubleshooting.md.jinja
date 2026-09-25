@@ -30,7 +30,7 @@ If you can't access the private repository:
 
 If you get import errors:
 
-```python
+``` python
 import {{ package_import_name }}  # Correct import
 ```
 
@@ -60,7 +60,7 @@ If tests are failing in your development environment:
 2. Check Python version compatibility
 3. Run tests individually to isolate issues:
 
-   ```bash
+   ``` bash
 {%- if use_pytest %}
    uv run pytest tests/test_specific.py -v
 {%- else %}
@@ -72,7 +72,7 @@ If tests are failing in your development environment:
 
 If pre-commit hooks or CI checks are failing:
 
-```bash
+``` bash
 # Fix formatting
 {%- if formatter == 'Ruff-format' %}
 uv run ruff format .
@@ -92,13 +92,13 @@ uv run mypy src/{{ package_import_name }}
 If you're having environment-related problems:
 
 1. Use a clean virtual environment:
-   ```bash
+   ``` bash
    uv venv --python {{ python_version }}
    uv sync
    ```
 
 2. Clear any cached files:
-   ```bash
+   ``` bash
    uv clean
    ```
 
